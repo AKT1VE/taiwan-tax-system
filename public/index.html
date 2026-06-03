@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>稅務申報系統 / Taiwan Studio Tax System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#1a1a2e;--ink2:#2d2d4e;--paper:#f5f3ee;--paper2:#ede9e0;
+  --accent:#c84b31;--accent2:#e8a87c;--green:#2d7d5a;
+  --red-light:#fdf0ed;--gold:#b8860b;--gold-light:#fdf8e8;
+  --border:#d4cfc4;--blue:#3b5bdb;--blue-light:#e8f0fd;
+  --mono:'DM Mono',monospace;--sans:'Noto Sans TC',sans-serif;--serif:'Noto Serif TC',serif;
+}
+body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height:100vh}
+.app{display:flex;flex-direction:column;min-height:100vh}
+.header{background:var(--ink);color:white;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid var(--accent);position:sticky;top:0;z-index:100}
+.logo-zh{font-family:var(--serif);font-size:19px;color:white;letter-spacing:2px}
+.logo-zh span{color:var(--accent2)}
+.logo-en{font-family:var(--mono);font-size:10px;color:#6666aa;letter-spacing:1px;text-transform:uppercase;margin-top:2px}
+.period-badge{font-family:var(--mono);font-size:10px;background:var(--accent);color:white;padding:4px 10px;border-radius:4px;line-height:1.8;text-align:right}
+.tabs{display:flex;background:var(--ink2);padding:0 28px;border-bottom:1px solid #1a1a3e}
+.tab{font-family:var(--sans);font-size:13px;color:#8888aa;padding:12px 20px;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;border:none;background:none;font-weight:500}
+.tab.active{color:white;border-bottom-color:var(--accent)}
+.tab:hover:not(.active){color:#ccccdd}
+.main{flex:1;padding:24px 28px;max-width:1140px;margin:0 auto;width:100%}
+.panel{display:none}.panel.active{display:block}
+.upload-section{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.upload-box{border:2px dashed var(--border);border-radius:10px;padding:28px 20px;text-align:center;cursor:pointer;transition:all 0.2s;background:white;position:relative;overflow:hidden}
+.upload-box:hover{border-color:var(--accent);background:var(--red-light)}
+.upload-box input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-icon{font-size:30px;margin-bottom:8px;display:block}
+.upload-title-zh{font-size:15px;font-weight:700;color:var(--ink);letter-spacing:1px;margin-bottom:2px}
+.upload-title-en{font-size:11px;color:#999;margin-bottom:6px}
+.upload-sub-zh{font-size:12px;color:#777;line-height:1.6}
+.upload-sub-en{font-size:11px;color:#aaa;margin-top:2px}
+.upload-tag{display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:3px;margin-top:8px;font-weight:500;letter-spacing:1px}
+.tag-sales{background:#fde8e8;color:#c84b31}
+.tag-expense{background:#e8f0fd;color:#3b5bdb}
+#fileList{margin-bottom:16px}
+.file-preview{background:white;border:1px solid var(--border);border-radius:8px;padding:11px 14px;margin-bottom:8px;display:flex;align-items:center;gap:12px;font-size:13px}
+.file-icon-el{font-size:20px;width:28px;text-align:center}
+.file-info{flex:1}
+.file-name{font-weight:500;color:var(--ink);font-size:13px}
+.file-status{font-family:var(--mono);font-size:11px;color:#888;margin-top:2px}
+.status-processing{color:var(--gold)}.status-done{color:var(--green)}.status-error{color:var(--accent)}
+.progress-bar{height:3px;background:var(--paper2);border-radius:2px;margin-top:5px;overflow:hidden}
+.progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 0.5s}
+.card{background:white;border-radius:10px;border:1px solid var(--border);padding:20px;margin-bottom:20px}
+.section-title{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:14px;display:flex;align-items:center;gap:8px;letter-spacing:1px}
+.section-title i{color:var(--accent);font-size:16px}
+.section-title-sub{font-size:10px;color:#aaa;font-family:var(--mono);font-weight:400;letter-spacing:0.5px;margin-left:2px}
+.form-row{display:grid;grid-template-columns:140px 1fr 1fr 150px 120px;gap:10px;align-items:end;margin-bottom:8px}
+.form-row-period{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;max-width:540px}
+.form-group{display:flex;flex-direction:column;gap:3px}
+.form-group label{font-size:11px;color:#888;font-weight:600;letter-spacing:0.3px}
+.form-group label span{display:block;font-size:10px;color:#bbb;font-family:var(--mono);font-weight:400}
+.form-group input,.form-group select{font-family:var(--sans);font-size:13px;padding:8px 10px;border:1px solid var(--border);border-radius:6px;background:var(--paper);color:var(--ink);outline:none;transition:border-color 0.2s}
+.form-group input:focus,.form-group select:focus{border-color:var(--accent);background:white}
+.btn{font-family:var(--sans);font-size:13px;font-weight:700;padding:9px 18px;border-radius:6px;border:none;cursor:pointer;transition:all 0.15s;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.btn-add{background:var(--ink);color:white}.btn-add:hover{background:#0d0d20}
+.btn-primary{background:var(--accent);color:white;font-size:14px;padding:13px 30px}.btn-primary:hover{background:#a83828}
+.btn-secondary{background:white;color:var(--ink);border:1px solid var(--border)}.btn-secondary:hover{background:var(--paper2)}
+.btn-danger{background:#fff0f0;color:var(--accent);border:1px solid #fcc}.btn-danger:hover{background:#ffe0e0}
+.ledger-header-row{display:grid;grid-template-columns:90px 1fr 110px 130px 90px 50px;gap:10px;padding:8px 12px;font-size:10px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:0.5px;background:var(--paper2);border-radius:6px;margin-bottom:6px}
+.item-row{display:grid;grid-template-columns:90px 1fr 110px 130px 90px 50px;gap:10px;align-items:center;padding:10px 12px;border-radius:6px;background:var(--paper);margin-bottom:5px;font-size:13px;transition:background 0.15s}
+.item-row:hover{background:var(--paper2)}
+.item-type{font-family:var(--mono);font-size:10px;font-weight:500;padding:3px 8px;border-radius:3px;text-align:center;letter-spacing:0.5px}
+.type-sales{background:var(--red-light);color:var(--accent)}
+.type-expense{background:var(--blue-light);color:var(--blue)}
+.item-amount{font-family:var(--mono);font-weight:500;text-align:right;font-size:13px}
+.item-del{color:#ddd;cursor:pointer;border:none;background:none;font-size:18px;line-height:1;transition:color 0.2s;padding:0 4px}
+.item-del:hover{color:var(--accent)}
+.empty-state{text-align:center;padding:36px 20px;color:#bbb}
+.empty-state i{font-size:36px;display:block;margin-bottom:10px;opacity:0.25}
+.empty-state p{font-size:13px;line-height:1.8}
+.analyze-bar{background:white;border:1px solid var(--border);border-radius:10px;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;gap:20px}
+.analyze-text-zh{font-size:15px;font-weight:700;margin-bottom:2px;letter-spacing:1px}
+.analyze-text-en{font-family:var(--mono);font-size:10px;color:#999;text-transform:uppercase;letter-spacing:1px}
+.analyze-desc{font-size:12px;color:#888;margin-top:6px;line-height:1.6}
+.ai-badge{font-family:var(--mono);font-size:9px;background:var(--accent);color:white;padding:2px 6px;border-radius:3px;letter-spacing:1px;vertical-align:middle;margin-left:6px}
+.spinner{display:inline-block;width:15px;height:15px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin 0.7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.report-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;flex-wrap:wrap;gap:16px}
+.report-title-zh{font-family:var(--serif);font-size:28px;color:var(--ink);letter-spacing:2px}
+.report-title-en{font-size:12px;color:#aaa;font-family:var(--mono);margin-top:4px;letter-spacing:1px}
+.report-period{font-size:13px;color:#888;margin-top:6px}
+.report-meta{font-family:var(--mono);font-size:11px;color:#aaa;line-height:2;text-align:right}
+.bilingual-summary{background:white;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:16px 20px;margin-top:14px;max-width:720px}
+.summary-zh{font-size:14px;line-height:1.9;color:var(--ink2);margin-bottom:12px;padding-bottom:12px;border-bottom:1px dashed var(--border)}
+.summary-en{font-size:12px;line-height:1.7;color:#777;font-style:italic}
+.summary-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+.summary-card{background:white;border:1px solid var(--border);border-radius:10px;padding:16px 18px;border-top:3px solid transparent}
+.card-income{border-top-color:var(--green)}.card-expense{border-top-color:var(--blue)}.card-vat{border-top-color:var(--gold)}.card-profit{border-top-color:var(--accent)}
+.card-label-zh{font-size:13px;font-weight:700;margin-bottom:1px}
+.card-label-en{font-size:10px;color:#aaa;font-family:var(--mono);margin-bottom:8px}
+.card-value{font-family:var(--mono);font-size:21px;font-weight:500}
+.card-sub{font-size:11px;color:#aaa;margin-top:5px;font-family:var(--mono);line-height:1.5}
+.ledger-section{background:white;border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:16px}
+.ledger-head{padding:13px 18px;font-weight:700;display:flex;justify-content:space-between;align-items:center}
+.ledger-head-zh{font-size:14px;letter-spacing:1px}
+.ledger-head-en{font-family:var(--mono);font-size:10px;opacity:0.6;margin-top:2px}
+.ledger-head-count{font-family:var(--mono);font-size:12px}
+.ledger-table{width:100%;border-collapse:collapse;font-size:13px}
+.ledger-table th{padding:9px 16px;text-align:left;background:var(--paper);border-bottom:1px solid var(--border);font-size:10px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:0.5px}
+.ledger-table th.r{text-align:right}
+.ledger-table td{padding:10px 16px;border-bottom:1px solid var(--paper2);vertical-align:middle}
+.ledger-table td.r{text-align:right;font-family:var(--mono);font-weight:500}
+.ledger-table tr:last-child td{border-bottom:none}
+.ledger-table tfoot td{font-weight:700;background:var(--paper);font-family:var(--mono)}
+.src-badge{font-family:var(--mono);font-size:10px;padding:2px 7px;border-radius:3px}
+.src-manual{background:var(--gold-light);color:var(--gold)}
+.src-upload{background:#f0f0ff;color:#6666cc}
+.vat-summary-table{width:100%;border-collapse:collapse;font-size:14px}
+.vat-summary-table td{padding:12px 20px;border-bottom:1px solid var(--paper2)}
+.vat-summary-table tr:last-child td{border-bottom:none;font-size:16px;padding-top:16px}
+.actions-bar{display:flex;gap:12px;justify-content:flex-end;margin-top:24px;flex-wrap:wrap}
+.no-report{text-align:center;padding:80px 20px;color:#ccc}
+.no-report i{font-size:56px;display:block;margin-bottom:16px;opacity:0.2}
+.no-report p{font-size:14px;line-height:2}
+.toast{position:fixed;bottom:28px;right:28px;background:var(--ink);color:white;padding:12px 20px;border-radius:10px;font-size:13px;display:flex;align-items:flex-start;gap:10px;transform:translateY(80px);opacity:0;transition:all 0.3s;z-index:9999;max-width:320px;line-height:1.6;box-shadow:0 8px 32px rgba(0,0,0,0.3)}
+.toast.show{transform:translateY(0);opacity:1}
+.toast i{color:var(--accent2);margin-top:1px;flex-shrink:0}
+@media(max-width:768px){
+  .upload-section{grid-template-columns:1fr}
+  .summary-cards{grid-template-columns:1fr 1fr}
+  .form-row{grid-template-columns:1fr 1fr}
+  .analyze-bar{flex-direction:column;align-items:flex-start}
+  .header{padding:12px 16px}
+  .main{padding:16px}
+}
+@media print{
+  .tabs,.actions-bar,.upload-section,#fileList,.card,.analyze-bar{display:none!important}
+  .header{position:static}
+  #panel-report{display:block!important}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div>
+      <div class="logo-zh">稅務申報系統 <span>／</span> Tax System</div>
+      <div class="logo-en">行號 Studio · VAT &amp; Income Tax · Bilingual</div>
+    </div>
+    <div class="period-badge" id="periodBadge">申報期間<br>Period: —</div>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('upload')"><i class="ti ti-upload"></i> 上傳與輸入 / Upload &amp; Entry</button>
+    <button class="tab" onclick="switchTab('report')"><i class="ti ti-file-text"></i> 稅務報告 / Tax Report</button>
+  </div>
+  <div class="main">
+    <div class="panel active" id="panel-upload">
+      <div class="upload-section">
+        <div class="upload-box">
+          <input type="file" multiple accept=".jpg,.jpeg,.png,.pdf,.xml" onchange="handleFiles(event,'sales')">
+          <span class="upload-icon">🧾</span>
+          <div class="upload-title-zh">銷項憑證</div>
+          <div class="upload-title-en">Sales Invoices</div>
+          <div class="upload-sub-zh">開立給客戶的發票與收據</div>
+          <div class="upload-sub-en">Invoices &amp; receipts issued to clients</div>
+          <div style="font-size:11px;color:#bbb;margin-top:6px">JPG · PNG · PDF · e-Invoice XML</div>
+          <span class="upload-tag tag-sales">銷項 INCOME</span>
+        </div>
+        <div class="upload-box">
+          <input type="file" multiple accept=".jpg,.jpeg,.png,.pdf,.xml" onchange="handleFiles(event,'expense')">
+          <span class="upload-icon">🛒</span>
+          <div class="upload-title-zh">進項憑證</div>
+          <div class="upload-title-en">Purchase Receipts</div>
+          <div class="upload-sub-zh">公司採購的發票與收據</div>
+          <div class="upload-sub-en">Receipts for business expenses</div>
+          <div style="font-size:11px;color:#bbb;margin-top:6px">JPG · PNG · PDF · e-Invoice XML</div>
+          <span class="upload-tag tag-expense">進項 EXPENSE</span>
+        </div>
+      </div>
+      <div id="fileList"></div>
+      <div class="card">
+        <div class="section-title"><i class="ti ti-calendar"></i> 申報期間設定 <span class="section-title-sub">Tax Period</span></div>
+        <div class="form-row-period">
+          <div class="form-group">
+            <label>申報類型 <span>Period Type</span></label>
+            <select id="periodType" onchange="updatePeriod()">
+              <option value="bimonthly">雙月營業稅 Bi-monthly VAT</option>
+              <option value="annual">年度所得稅 Annual Income Tax</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>年度 <span>Year</span></label>
+            <input type="number" id="periodYear" value="2025" onchange="updatePeriod()">
+          </div>
+          <div class="form-group" id="bimonthlyGroup">
+            <label>期別 <span>Period</span></label>
+            <select id="periodMonth" onchange="updatePeriod()">
+              <option value="1">1–2月 Jan–Feb</option>
+              <option value="3">3–4月 Mar–Apr</option>
+              <option value="5">5–6月 May–Jun</option>
+              <option value="7">7–8月 Jul–Aug</option>
+              <option value="9">9–10月 Sep–Oct</option>
+              <option value="11">11–12月 Nov–Dec</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="section-title"><i class="ti ti-keyboard"></i> 手動輸入 <span class="section-title-sub">Manual Entry</span></div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>類型 <span>Type</span></label>
+            <select id="mType">
+              <option value="sales">銷項 Sales</option>
+              <option value="expense">進項 Expense</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>日期 <span>Date</span></label>
+            <input type="date" id="mDate">
+          </div>
+          <div class="form-group">
+            <label>說明 <span>Description</span></label>
+            <input type="text" id="mDesc" placeholder="例：設計服務、辦公室租金">
+          </div>
+          <div class="form-group">
+            <label>金額（未稅）<span>Amount excl. VAT (NT$)</span></label>
+            <input type="number" id="mAmount" placeholder="0" min="0">
+          </div>
+          <div class="form-group">
+            <label>&nbsp;<span>&nbsp;</span></label>
+            <button class="btn btn-add" onclick="addManual()"><i class="ti ti-plus"></i> 新增 Add</button>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="section-title" style="justify-content:space-between">
+          <span style="display:flex;align-items:center;gap:8px"><i class="ti ti-list"></i> 交易明細 <span class="section-title-sub">Transaction Ledger</span> <span id="itemCount" style="font-family:var(--mono);font-size:11px;color:#aaa;font-weight:400;letter-spacing:0;text-transform:none"></span></span>
+          <button class="btn btn-danger" onclick="clearAll()" style="padding:5px 12px;font-size:12px"><i class="ti ti-trash"></i> 清除全部 Clear</button>
+        </div>
+        <div id="itemRows">
+          <div class="empty-state"><i class="ti ti-inbox"></i><p>尚無交易記錄。請上傳憑證或手動輸入。<br><span style="font-size:11px;color:#ccc">No transactions yet.</span></p></div>
+        </div>
+      </div>
+      <div class="analyze-bar">
+        <div>
+          <div class="analyze-text-zh">產生稅務報告 <span class="ai-badge">AI</span></div>
+          <div class="analyze-text-en">Generate Tax Report</div>
+          <div class="analyze-desc">AI 將分析所有資料，計算營業稅，產出完整報告與試算表。<br>AI will analyze all entries, calculate VAT, and produce your full report + spreadsheet.</div>
+        </div>
+        <button class="btn btn-primary" id="analyzeBtn" onclick="generateReport()">
+          <i class="ti ti-report-analytics"></i> 產生報告 / Generate
+        </button>
+      </div>
+    </div>
+    <div class="panel" id="panel-report">
+      <div id="reportContent">
+        <div class="no-report">
+          <i class="ti ti-file-analytics"></i>
+          <p>尚無報告。請新增交易後點擊「產生報告」。<br>No report yet. Add transactions and click Generate Report.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"><i class="ti ti-check"></i><span id="toastMsg"></span></div>
+<script>
+const VAT=0.05;
+let items=[];
+let reportData=null;
+
+function switchTab(tab){
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['upload','report'][i]===tab));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+tab).classList.add('active');
+}
+function showToast(zh,en){
+  const t=document.getElementById('toast');
+  document.getElementById('toastMsg').innerHTML=zh+(en?'<br><span style="font-size:10px;color:#aaa;font-family:var(--mono)">'+en+'</span>':'');
+  t.classList.add('show');clearTimeout(t._to);
+  t._to=setTimeout(()=>t.classList.remove('show'),3500);
+}
+function updatePeriod(){
+  const type=document.getElementById('periodType').value;
+  const year=document.getElementById('periodYear').value;
+  document.getElementById('bimonthlyGroup').style.display=type==='annual'?'none':'';
+  const zhM={1:'1–2月',3:'3–4月',5:'5–6月',7:'7–8月',9:'9–10月',11:'11–12月'};
+  const enM={1:'Jan–Feb',3:'Mar–Apr',5:'May–Jun',7:'Jul–Aug',9:'Sep–Oct',11:'Nov–Dec'};
+  const m=document.getElementById('periodMonth').value;
+  const zh=type==='annual'?`${year} 年度所得稅`:`${year} 年 ${zhM[m]} 營業稅`;
+  const en=type==='annual'?`FY ${year} Income Tax`:`${enM[m]} ${year} VAT`;
+  document.getElementById('periodBadge').innerHTML=zh+'<br><span style="font-size:9px;color:#aaa">'+en+'</span>';
+}
+function saveItems(){localStorage.setItem('tw_tax_items',JSON.stringify(items));}
+function loadItems(){try{const s=localStorage.getItem('tw_tax_items');if(s){items=JSON.parse(s);renderItems();}}catch(e){}}
+const fmt=n=>'NT$'+Math.round(n).toLocaleString('zh-TW');
+function renderItems(){
+  const el=document.getElementById('itemRows');
+  document.getElementById('itemCount').textContent=items.length?`（${items.length} 筆）`:'';
+  if(!items.length){el.innerHTML='<div class="empty-state"><i class="ti ti-inbox"></i><p>尚無交易記錄。<br><span style="font-size:11px;color:#ccc">No transactions yet.</span></p></div>';return;}
+  el.innerHTML='<div class="ledger-header-row"><span>類型</span><span>說明</span><span>日期</span><span style="text-align:right">未稅金額</span><span style="text-align:right">營業稅 5%</span><span></span></div>'+
+    items.map((it,i)=>`<div class="item-row">
+      <span class="item-type ${it.type==='sales'?'type-sales':'type-expense'}">${it.type==='sales'?'銷項':'進項'}</span>
+      <span>${it.desc}</span>
+      <span style="font-family:var(--mono);font-size:12px;color:#888">${it.date||'—'}</span>
+      <span class="item-amount">${fmt(it.amount)}</span>
+      <span class="item-amount" style="color:#aaa">${fmt(it.amount*VAT)}</span>
+      <button class="item-del" onclick="removeItem(${i})">×</button>
+    </div>`).join('');
+}
+function removeItem(i){items.splice(i,1);saveItems();renderItems();}
+function clearAll(){if(!confirm('確定清除所有資料？\nClear all data?'))return;items=[];saveItems();renderItems();}
+function addManual(){
+  const type=document.getElementById('mType').value;
+  const date=document.getElementById('mDate').value;
+  const desc=document.getElementById('mDesc').value.trim();
+  const amount=parseFloat(document.getElementById('mAmount').value);
+  if(!desc){showToast('請輸入說明','Enter a description');return;}
+  if(!amount||amount<=0){showToast('請輸入有效金額','Enter a valid amount');return;}
+  items.push({type,date,desc,amount,source:'manual'});
+  saveItems();renderItems();
+  document.getElementById('mDesc').value='';
+  document.getElementById('mAmount').value='';
+  showToast('已新增','Entry added');
+}
+function fileIcon(name){
+  const ext=name.split('.').pop().toLowerCase();
+  if(['jpg','jpeg','png'].includes(ext))return'🖼️';
+  if(ext==='pdf')return'📄';
+  if(ext==='xml')return'📋';
+  return'📎';
+}
+function toBase64(file){
+  return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=rej;r.readAsDataURL(file);});
+}
+async function callClaude(payload){
+  const r=await fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+  if(!r.ok)throw new Error('API error '+r.status);
+  return r.json();
+}
+async function handleFiles(event,type){
+  const files=Array.from(event.target.files);
+  if(!files.length)return;
+  const container=document.getElementById('fileList');
+  for(const file of files){
+    const id='f'+Date.now()+Math.random().toString(36).slice(2,5);
+    const div=document.createElement('div');
+    div.className='file-preview';div.id=id;
+    div.innerHTML=`<span class="file-icon-el">${fileIcon(file.name)}</span>
+      <div class="file-info">
+        <div class="file-name">${file.name}</div>
+        <div class="file-status status-processing" id="${id}-s">AI 辨識中… / Reading with AI...</div>
+        <div class="progress-bar"><div class="progress-fill" id="${id}-p" style="width:10%"></div></div>
+      </div>`;
+    container.appendChild(div);
+    const prog=s=>document.getElementById(id+s);
+    try{
+      prog('-p').style.width='40%';
+      const ext=file.name.split('.').pop().toLowerCase();
+      let content=[];
+      if(['jpg','jpeg','png'].includes(ext)){
+        const b64=await toBase64(file);
+        content=[
+          {type:'image',source:{type:'base64',media_type:file.type||'image/jpeg',data:b64}},
+          {type:'text',text:`這是台灣行號的${type==='sales'?'銷項發票':'進項收據'}。請擷取：日期(YYYY-MM-DD)、說明(品項)、未含5%營業稅金額(若含稅請÷1.05)。只回傳JSON：{"date":"YYYY-MM-DD","desc":"...","amount":0}`}
+        ];
+      }else if(ext==='pdf'){
+        const b64=await toBase64(file);
+        content=[
+          {type:'document',source:{type:'base64',media_type:'application/pdf',data:b64}},
+          {type:'text',text:`台灣行號${type==='sales'?'銷項發票':'進項收據'}。擷取日期、說明、未稅金額。只回傳JSON：{"date":"YYYY-MM-DD","desc":"...","amount":0}`}
+        ];
+      }else{
+        const text=await file.text();
+        content=[{type:'text',text:`解析台灣電子發票XML，擷取日期、品項、未稅金額。XML:\n${text.slice(0,3000)}\n只回傳JSON：{"date":"YYYY-MM-DD","desc":"...","amount":0}`}];
+      }
+      prog('-p').style.width='70%';
+      const data=await callClaude({model:'claude-sonnet-4-20250514',max_tokens:300,
+        system:'台灣稅務文件解析器。只回傳有效JSON，不含Markdown。',
+        messages:[{role:'user',content}]});
+      const raw=data.content?.map(c=>c.text||'').join('').trim();
+      const parsed=JSON.parse(raw.replace(/```json|```/g,'').trim());
+      prog('-p').style.width='100%';
+      prog('-s').className='file-status status-done';
+      prog('-s').textContent=`✓ ${type==='sales'?'銷項':'進項'} · ${parsed.desc} · NT$${Math.round(parsed.amount).toLocaleString()}`;
+      items.push({type,date:parsed.date,desc:parsed.desc,amount:parsed.amount,source:file.name});
+      saveItems();renderItems();
+      showToast(`${file.name} 解析完成`,'Processed');
+    }catch(e){
+      prog('-s').className='file-status status-error';
+      prog('-s').textContent='無法解析，請手動輸入 / Could not parse';
+      console.error(e);
+    }
+  }
+  event.target.value='';
+}
+async function generateReport(){
+  if(!items.length){showToast('請先新增交易','Add transactions first');return;}
+  const btn=document.getElementById('analyzeBtn');
+  btn.innerHTML='<span class="spinner"></span> 分析中…';btn.disabled=true;
+  const sales=items.filter(i=>i.type==='sales');
+  const expenses=items.filter(i=>i.type==='expense');
+  const tS=sales.reduce((s,i)=>s+i.amount,0);
+  const tE=expenses.reduce((s,i)=>s+i.amount,0);
+  const oVat=tS*VAT,iVat=tE*VAT,vatPay=Math.max(0,oVat-iVat),profit=tS-tE;
+  const pType=document.getElementById('periodType').value;
+  const pYear=document.getElementById('periodYear').value;
+  const pMonth=document.getElementById('periodMonth').value;
+  const zhM={1:'1–2月',3:'3–4月',5:'5–6月',7:'7–8月',9:'9–10月',11:'11–12月'};
+  const enM={1:'Jan–Feb',3:'Mar–Apr',5:'May–Jun',7:'Jul–Aug',9:'Sep–Oct',11:'Nov–Dec'};
+  const zhP=pType==='annual'?`${pYear} 年度`:`${pYear} 年 ${zhM[pMonth]}`;
+  const enP=pType==='annual'?`FY ${pYear}`:`${enM[pMonth]} ${pYear}`;
+  let summary={zh:'',en:''};
+  try{
+    const data=await callClaude({model:'claude-sonnet-4-20250514',max_tokens:600,
+      system:'台灣稅務會計師。只回傳有效JSON，不含Markdown。',
+      messages:[{role:'user',content:`你是台灣稅務會計師，協助一家行號工作室。分別用繁體中文和英文各寫3-4句摘要。
+期間：${zhP}/${enP} 銷項：NT$${Math.round(tS).toLocaleString()} 進項：NT$${Math.round(tE).toLocaleString()} 應繳稅：NT$${Math.round(vatPay).toLocaleString()} 淨利：NT$${Math.round(profit).toLocaleString()}
+回傳JSON：{"zh":"繁中摘要","en":"English summary"}`}]});
+    const raw=data.content?.map(c=>c.text||'').join('').trim();
+    summary=JSON.parse(raw.replace(/```json|```/g,'').trim());
+  }catch(e){console.error(e);}
+  reportData={sales,expenses,tS,tE,oVat,iVat,vatPay,profit,zhP,enP,summary};
+  renderReport(reportData);
+  switchTab('report');
+  showToast('報告產生完成','Report ready');
+  btn.innerHTML='<i class="ti ti-report-analytics"></i> 產生報告 / Generate';btn.disabled=false;
+}
+function renderReport(d){
+  document.getElementById('reportContent').innerHTML=`
+    <div class="report-top">
+      <div>
+        <div class="report-title-zh">稅務申報報告</div>
+        <div class="report-title-en">TAX DECLARATION REPORT</div>
+        <div class="report-period">${d.zhP} · 行號工作室 ／ ${d.enP} · Studio</div>
+        ${(d.summary.zh||d.summary.en)?`<div class="bilingual-summary">
+          ${d.summary.zh?`<div class="summary-zh">${d.summary.zh}</div>`:''}
+          ${d.summary.en?`<div class="summary-en">${d.summary.en}</div>`:''}
+        </div>`:''}
+      </div>
+      <div class="report-meta">產生日期：${new Date().toLocaleDateString('zh-TW')}<br>Generated：${new Date().toLocaleDateString('en-GB')}<br>筆數：${items.length}<br>VAT Rate：5%</div>
+    </div>
+    <div class="summary-cards">
+      <div class="summary-card card-income"><div class="card-label-zh">銷項總額</div><div class="card-label-en">Total Sales</div><div class="card-value" style="color:var(--green)">${fmt(d.tS)}</div><div class="card-sub">Output VAT: ${fmt(d.oVat)}</div></div>
+      <div class="summary-card card-expense"><div class="card-label-zh">進項總額</div><div class="card-label-en">Total Expenses</div><div class="card-value" style="color:var(--blue)">${fmt(d.tE)}</div><div class="card-sub">Input VAT: ${fmt(d.iVat)}</div></div>
+      <div class="summary-card card-vat"><div class="card-label-zh">應繳營業稅</div><div class="card-label-en">VAT Payable</div><div class="card-value" style="color:${d.vatPay>0?'var(--gold)':'var(--green)'}">${fmt(d.vatPay)}</div><div class="card-sub">${d.vatPay<=0?'留抵 Credit':'繳至國稅局'}</div></div>
+      <div class="summary-card card-profit"><div class="card-label-zh">稅前淨利</div><div class="card-label-en">Net Profit</div><div class="card-value" style="color:${d.profit>=0?'var(--green)':'var(--accent)'}">${fmt(d.profit)}</div><div class="card-sub">Before income tax</div></div>
+    </div>
+    <div class="ledger-section">
+      <div class="ledger-head" style="background:var(--ink);color:white"><div><div class="ledger-head-zh">銷項明細</div><div class="ledger-head-en">Sales Invoices</div></div><span class="ledger-head-count">${d.sales.length} 筆 · ${fmt(d.tS)}</span></div>
+      <table class="ledger-table"><thead><tr><th>日期</th><th>說明</th><th>來源</th><th class="r">未稅金額</th><th class="r">稅額</th><th class="r">含稅合計</th></tr></thead>
+      <tbody>${d.sales.map(i=>`<tr><td style="font-family:var(--mono);font-size:12px;color:#888">${i.date||'—'}</td><td>${i.desc}</td><td><span class="src-badge ${i.source==='manual'?'src-manual':'src-upload'}">${i.source==='manual'?'手動':'上傳'}</span></td><td class="r">${fmt(i.amount)}</td><td class="r" style="color:#aaa">${fmt(i.amount*VAT)}</td><td class="r">${fmt(i.amount*1.05)}</td></tr>`).join('')}</tbody>
+      <tfoot><tr><td colspan="3">合計</td><td class="r">${fmt(d.tS)}</td><td class="r">${fmt(d.oVat)}</td><td class="r">${fmt(d.tS*1.05)}</td></tr></tfoot></table>
+    </div>
+    <div class="ledger-section">
+      <div class="ledger-head" style="background:var(--ink2);color:white"><div><div class="ledger-head-zh">進項明細</div><div class="ledger-head-en">Purchase Receipts</div></div><span class="ledger-head-count">${d.expenses.length} 筆 · ${fmt(d.tE)}</span></div>
+      <table class="ledger-table"><thead><tr><th>日期</th><th>說明</th><th>來源</th><th class="r">未稅金額</th><th class="r">稅額</th><th class="r">含稅合計</th></tr></thead>
+      <tbody>${d.expenses.map(i=>`<tr><td style="font-family:var(--mono);font-size:12px;color:#888">${i.date||'—'}</td><td>${i.desc}</td><td><span class="src-badge ${i.source==='manual'?'src-manual':'src-upload'}">${i.source==='manual'?'手動':'上傳'}</span></td><td class="r">${fmt(i.amount)}</td><td class="r" style="color:#aaa">${fmt(i.amount*VAT)}</td><td class="r">${fmt(i.amount*1.05)}</td></tr>`).join('')}</tbody>
+      <tfoot><tr><td colspan="3">合計</td><td class="r">${fmt(d.tE)}</td><td class="r">${fmt(d.iVat)}</td><td class="r">${fmt(d.tE*1.05)}</td></tr></tfoot></table>
+    </div>
+    <div class="ledger-section">
+      <div class="ledger-head" style="background:var(--accent);color:white"><div><div class="ledger-head-zh">營業稅申報摘要</div><div class="ledger-head-en">VAT Declaration Summary</div></div></div>
+      <table class="vat-summary-table">
+        <tr><td>銷項稅額 Output Tax</td><td style="text-align:right;font-family:var(--mono)">${fmt(d.oVat)}</td></tr>
+        <tr><td>進項稅額扣抵 Input Tax Credit</td><td style="text-align:right;font-family:var(--mono);color:var(--green)">− ${fmt(d.iVat)}</td></tr>
+        <tr style="border-top:2px solid var(--border)"><td><strong>應繳稅額 Net VAT Payable</strong></td><td style="text-align:right;font-family:var(--mono);font-weight:700;color:${d.vatPay>0?'var(--gold)':'var(--green)'}"><strong>${fmt(d.vatPay)}</strong></td></tr>
+      </table>
+    </div>
+    <div class="actions-bar">
+      <button class="btn btn-secondary" onclick="downloadCSV()"><i class="ti ti-file-spreadsheet"></i> 下載試算表 / Download CSV</button>
+      <button class="btn btn-secondary" onclick="window.print()"><i class="ti ti-printer"></i> 列印 / Print PDF</button>
+    </div>`;
+}
+function downloadCSV(){
+  if(!reportData)return;
+  const d=reportData;
+  const rows=[
+    ['類型/Type','日期/Date','說明/Description','來源/Source','未稅金額','VAT','含稅金額'],
+    ...d.sales.map(i=>['銷項/Sales',i.date||'',i.desc,i.source,i.amount,+(i.amount*VAT).toFixed(0),+(i.amount*1.05).toFixed(0)]),
+    ...d.expenses.map(i=>['進項/Expense',i.date||'',i.desc,i.source,i.amount,+(i.amount*VAT).toFixed(0),+(i.amount*1.05).toFixed(0)]),
+    [],['摘要/SUMMARY','','','','','',''],
+    ['銷項總額','','','',d.tS,'',''],['進項總額','','','',d.tE,'',''],
+    ['銷項稅額','','','','',d.oVat,''],['進項稅額','','','','',d.iVat,''],
+    ['應繳稅額','','','','',d.vatPay,''],['稅前淨利','','','',d.profit,'',''],
+  ];
+  const csv=rows.map(r=>r.map(c=>`"${c}"`).join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
+  a.download=`稅務報告_${d.zhP.replace(/[^\w\u4e00-\u9fff]/g,'_')}.csv`;
+  a.click();
+  showToast('試算表已下載','Downloaded');
+}
+document.addEventListener('DOMContentLoaded',()=>{updatePeriod();loadItems();});
+</script>
+</body>
+</html>
