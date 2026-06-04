@@ -530,7 +530,9 @@ async function handleFiles(event, type) {
 
     } catch(e) {
       prog('-s').className = 'file-status status-error';
-      prog('-s').textContent = 'Could not parse — add manually / 無法解析';
+      const errMsg = e.message || "Unknown error";
+      prog('-s').className = 'file-status status-error';
+      prog('-s').textContent = `Error: ${errMsg} — add manually`;
       console.error(e);
     }
   }
