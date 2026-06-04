@@ -362,22 +362,13 @@ function updatePeriod() {
   document.getElementById('periodBadge').innerHTML = zh + '<br><span style="font-size:9px;color:#aaa">' + en + '</span>';
 }
 
-let isSaving = false;
-let pendingSave = false;
-
 async function loadItems() {
-  // Never refresh while a save is pending or in progress — prevents race condition
-  if (isSaving || saveTimer) return;
   setSyncStatus('loading', 'Loading...');
   try {
     const resp = await fetch('/api/db');
     if (!resp.ok) throw new Error('Load failed');
-    const fresh = await resp.json();
-    // Only update if we have no pending save (double-check)
-    if (!isSaving && !saveTimer) {
-      items = fresh;
-      renderItems();
-    }
+    items = await resp.json();
+    renderItems();
     setSyncStatus('live', '● Live — shared');
   } catch(e) {
     setSyncStatus('error', 'Load failed');
@@ -386,33 +377,25 @@ async function loadItems() {
 }
 
 async function saveItems() {
-  isSaving = true;
   setSyncStatus('saving', 'Saving...');
   try {
+    const snapshot = JSON.stringify(items);
     const resp = await fetch('/api/db', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({items})
+      body: JSON.stringify({items: JSON.parse(snapshot)})
     });
-    if (!resp.ok) throw new Error('Save failed');
+    if (!resp.ok) throw new Error('Save failed ' + resp.status);
     setSyncStatus('live', '● Live — shared');
   } catch(e) {
     setSyncStatus('error', 'Save failed');
-    showToast('Could not save changes', 'Retry or add manually');
-  } finally {
-    isSaving = false;
-    // If another save was requested while we were saving, do it now
-    if (pendingSave) { pendingSave = false; saveItems(); }
+    showToast('Could not save — tap Refresh and re-add', e.message);
   }
 }
 
 function scheduleSave() {
-  clearTimeout(saveTimer);
-  saveTimer = setTimeout(() => {
-    saveTimer = null;
-    if (isSaving) { pendingSave = true; return; }
-    saveItems();
-  }, 1200);
+  // Immediate save — no delay, no race condition
+  saveItems();
 }
 
 const fmt = n => 'NT$' + Math.round(n).toLocaleString('zh-TW');
@@ -672,7 +655,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (name) document.getElementById('userName').value = name;
   document.getElementById('userName').addEventListener('input', e => localStorage.setItem('tw_tax_username', e.target.value));
   loadItems();
-  setInterval(loadItems, 30000);
+  // auto-refresh removed — use Refresh button to sync from other devices
 });
 </script>
 </body>
