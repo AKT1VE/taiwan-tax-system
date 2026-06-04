@@ -362,13 +362,22 @@ function updatePeriod() {
   document.getElementById('periodBadge').innerHTML = zh + '<br><span style="font-size:9px;color:#aaa">' + en + '</span>';
 }
 
+let isSaving = false;
+let pendingSave = false;
+
 async function loadItems() {
+  // Never refresh while a save is pending or in progress — prevents race condition
+  if (isSaving || saveTimer) return;
   setSyncStatus('loading', 'Loading...');
   try {
     const resp = await fetch('/api/db');
     if (!resp.ok) throw new Error('Load failed');
-    items = await resp.json();
-    renderItems();
+    const fresh = await resp.json();
+    // Only update if we have no pending save (double-check)
+    if (!isSaving && !saveTimer) {
+      items = fresh;
+      renderItems();
+    }
     setSyncStatus('live', '● Live — shared');
   } catch(e) {
     setSyncStatus('error', 'Load failed');
@@ -377,6 +386,7 @@ async function loadItems() {
 }
 
 async function saveItems() {
+  isSaving = true;
   setSyncStatus('saving', 'Saving...');
   try {
     const resp = await fetch('/api/db', {
@@ -389,10 +399,21 @@ async function saveItems() {
   } catch(e) {
     setSyncStatus('error', 'Save failed');
     showToast('Could not save changes', 'Retry or add manually');
+  } finally {
+    isSaving = false;
+    // If another save was requested while we were saving, do it now
+    if (pendingSave) { pendingSave = false; saveItems(); }
   }
 }
 
-function scheduleSave() { clearTimeout(saveTimer); saveTimer = setTimeout(saveItems, 800); }
+function scheduleSave() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    saveTimer = null;
+    if (isSaving) { pendingSave = true; return; }
+    saveItems();
+  }, 1200);
+}
 
 const fmt = n => 'NT$' + Math.round(n).toLocaleString('zh-TW');
 
