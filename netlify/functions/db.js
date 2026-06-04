@@ -1,6 +1,6 @@
-const { getDeployStore } = require('@netlify/blobs');
+const { getStore } = require('@netlify/blobs');
 
-exports.handler = async function(event) {
+exports.handler = async function(event, context) {
   const headers = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Content-Type',
@@ -11,13 +11,14 @@ exports.handler = async function(event) {
   if (event.httpMethod === 'OPTIONS') return { statusCode: 200, headers, body: '' };
 
   try {
-    // getDeployStore uses Netlify's injected credentials automatically
-    // No env vars needed — Netlify handles auth at runtime
-    const store = getDeployStore('tax-data');
+    const store = getStore({
+      name: 'tax-data',
+      consistency: 'strong'
+    });
 
     if (event.httpMethod === 'GET') {
-      const data = await store.get('items', { type: 'text' });
-      console.log('GET items, found:', !!data, 'length:', data ? data.length : 0);
+      const data = await store.get('items');
+      console.log('GET items:', data ? 'found' : 'empty');
       return {
         statusCode: 200,
         headers,
@@ -37,7 +38,7 @@ exports.handler = async function(event) {
     }
 
   } catch(e) {
-    console.error('DB error:', e.message, e.stack);
+    console.error('DB error:', e.message);
     return {
       statusCode: 500,
       headers,
