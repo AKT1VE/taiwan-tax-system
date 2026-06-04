@@ -508,7 +508,7 @@ async function handleFiles(event, type) {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
+          model: 'claude-sonnet-4-6',
           max_tokens: 300,
           system: 'Taiwan tax document parser. Reply only with valid JSON, no markdown.',
           messages: [{role:'user', content}]
@@ -561,7 +561,7 @@ async function generateReport() {
   try {
     const resp = await fetch('/api/claude', {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({model:'claude-sonnet-4-20250514', max_tokens:600,
+      body: JSON.stringify({model:'claude-sonnet-4-6', max_tokens:600,
         system:'Taiwan tax accountant. Reply only with valid JSON, no markdown.',
         messages:[{role:'user', content:`Taiwan 行號 studio. Write 3-4 sentences each in Traditional Chinese and English: period overview, key figures, VAT position, one practical tip.
 Period:${zhP}/${enP} | Sales:NT$${Math.round(tS).toLocaleString()} | Expenses:NT$${Math.round(tE).toLocaleString()} | VAT payable:NT$${Math.round(vatPay).toLocaleString()} | Profit:NT$${Math.round(profit).toLocaleString()}
