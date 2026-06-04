@@ -38,17 +38,24 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height
 .tab:hover:not(.active){color:#ccccdd}
 .main{flex:1;padding:24px 28px;max-width:1140px;margin:0 auto;width:100%}
 .panel{display:none}.panel.active{display:block}
+
+/* Upload boxes — clearly different colors */
 .upload-section{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
-.upload-box{border:2px dashed var(--border);border-radius:10px;padding:28px 20px;text-align:center;cursor:pointer;transition:all 0.2s;background:white;position:relative;overflow:hidden}
-.upload-box:hover{border-color:var(--accent);background:var(--red-light)}
+.upload-box{border:3px solid transparent;border-radius:12px;padding:24px 16px;text-align:center;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden}
 .upload-box input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-.upload-icon{font-size:30px;margin-bottom:8px;display:block}
-.upload-title-zh{font-size:15px;font-weight:700;color:var(--ink);letter-spacing:1px;margin-bottom:2px}
-.upload-title-en{font-size:11px;color:#999;margin-bottom:6px}
-.upload-sub-zh{font-size:12px;color:#777;line-height:1.6}
-.upload-tag{display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:3px;margin-top:8px;font-weight:500;letter-spacing:1px}
-.tag-sales{background:#fde8e8;color:#c84b31}
-.tag-expense{background:#e8f0fd;color:#3b5bdb}
+.upload-box-sales{background:#fff5f5;border-color:#e8a0a0}
+.upload-box-sales:hover{background:#ffe8e8;border-color:var(--accent)}
+.upload-box-expense{background:#f0f4ff;border-color:#a0b4e8}
+.upload-box-expense:hover{background:#e4ecff;border-color:var(--blue)}
+.upload-icon{font-size:36px;margin-bottom:10px;display:block}
+.upload-title-zh{font-size:16px;font-weight:700;letter-spacing:1px;margin-bottom:2px}
+.upload-title-en{font-size:11px;color:#888;margin-bottom:6px}
+.upload-sub-zh{font-size:12px;color:#777;line-height:1.5}
+.upload-tag{display:inline-block;font-family:var(--mono);font-size:11px;padding:4px 12px;border-radius:20px;margin-top:10px;font-weight:700;letter-spacing:1px}
+.tag-sales{background:#c84b31;color:white}
+.tag-expense{background:#3b5bdb;color:white}
+.upload-hint{font-size:10px;color:#bbb;margin-top:6px}
+
 #fileList{margin-bottom:16px}
 .file-preview{background:white;border:1px solid var(--border);border-radius:8px;padding:11px 14px;margin-bottom:8px;display:flex;align-items:center;gap:12px;font-size:13px}
 .file-icon-el{font-size:20px;width:28px;text-align:center}
@@ -74,12 +81,12 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height
 .btn-primary{background:var(--accent);color:white;font-size:14px;padding:13px 30px}.btn-primary:hover{background:#a83828}
 .btn-secondary{background:white;color:var(--ink);border:1px solid var(--border)}.btn-secondary:hover{background:var(--paper2)}
 .btn-danger{background:#fff0f0;color:var(--accent);border:1px solid #fcc}.btn-danger:hover{background:#ffe0e0}
-.ledger-header-row{display:grid;grid-template-columns:90px 1fr 110px 130px 90px 80px 50px;gap:10px;padding:8px 12px;font-size:10px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:0.5px;background:var(--paper2);border-radius:6px;margin-bottom:6px}
-.item-row{display:grid;grid-template-columns:90px 1fr 110px 130px 90px 80px 50px;gap:10px;align-items:center;padding:10px 12px;border-radius:6px;background:var(--paper);margin-bottom:5px;font-size:13px;transition:background 0.15s}
+.ledger-header-row{display:grid;grid-template-columns:90px 1fr 100px 120px 80px 70px 44px;gap:8px;padding:8px 12px;font-size:10px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:0.5px;background:var(--paper2);border-radius:6px;margin-bottom:6px}
+.item-row{display:grid;grid-template-columns:90px 1fr 100px 120px 80px 70px 44px;gap:8px;align-items:center;padding:10px 12px;border-radius:6px;background:var(--paper);margin-bottom:5px;font-size:13px;transition:background 0.15s}
 .item-row:hover{background:var(--paper2)}
-.item-type{font-family:var(--mono);font-size:10px;font-weight:500;padding:3px 8px;border-radius:3px;text-align:center;letter-spacing:0.5px}
-.type-sales{background:var(--red-light);color:var(--accent)}
-.type-expense{background:var(--blue-light);color:var(--blue)}
+.item-type{font-family:var(--mono);font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;text-align:center;letter-spacing:0.5px}
+.type-sales{background:#c84b31;color:white}
+.type-expense{background:#3b5bdb;color:white}
 .item-amount{font-family:var(--mono);font-weight:500;text-align:right;font-size:13px}
 .item-who{font-family:var(--mono);font-size:10px;color:#aaa;text-align:center}
 .item-del{color:#ddd;cursor:pointer;border:none;background:none;font-size:18px;line-height:1;transition:color 0.2s;padding:0 4px}
@@ -115,7 +122,7 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height
 .ledger-head-en{font-family:var(--mono);font-size:10px;opacity:0.6;margin-top:2px}
 .ledger-head-count{font-family:var(--mono);font-size:12px}
 .ledger-table{width:100%;border-collapse:collapse;font-size:13px}
-.ledger-table th{padding:9px 16px;text-align:left;background:var(--paper);border-bottom:1px solid var(--border);font-size:10px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:0.5px}
+.ledger-table th{padding:9px 16px;text-align:left;background:var(--paper);border-bottom:1px solid var(--border);font-size:10px;font-weight:700;color:#888;text-transform:uppercase}
 .ledger-table th.r{text-align:right}
 .ledger-table td{padding:10px 16px;border-bottom:1px solid var(--paper2);vertical-align:middle}
 .ledger-table td.r{text-align:right;font-family:var(--mono);font-weight:500}
@@ -139,6 +146,9 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height
 .name-bar input{font-family:var(--sans);font-size:13px;padding:7px 12px;border:1px solid var(--border);border-radius:6px;background:var(--paper);color:var(--ink);outline:none;width:200px}
 .name-bar input:focus{border-color:var(--accent);background:white}
 .name-bar-hint{font-size:11px;color:#aaa;font-family:var(--mono)}
+.save-status{font-family:var(--mono);font-size:11px;padding:6px 12px;border-radius:6px;margin-bottom:12px;display:none}
+.save-ok{background:#e8f5ef;color:var(--green);display:block}
+.save-fail{background:#fdf0ed;color:var(--accent);display:block}
 @media(max-width:768px){
   .upload-section{grid-template-columns:1fr}
   .summary-cards{grid-template-columns:1fr 1fr}
@@ -146,7 +156,6 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height
   .analyze-bar{flex-direction:column;align-items:flex-start}
   .header{padding:12px 16px}
   .main{padding:16px}
-  .ledger-header-row,.item-row{grid-template-columns:70px 1fr 90px 100px 70px 60px 40px;font-size:11px}
 }
 @media print{
   .tabs,.actions-bar,.upload-section,#fileList,.card,.analyze-bar,.name-bar{display:none!important}
@@ -176,32 +185,41 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height
   </div>
   <div class="main">
     <div class="panel active" id="panel-upload">
+
       <div class="name-bar">
         <label><i class="ti ti-user" style="color:var(--accent)"></i> Your name:</label>
         <input type="text" id="userName" placeholder="e.g. Ken or Wife" maxlength="30">
-        <span class="name-bar-hint">Entries you add will be tagged with your name.</span>
+        <span class="name-bar-hint">Entries tagged with your name.</span>
+      </div>
+
+      <!-- Upload boxes — clearly color coded -->
+      <div style="margin-bottom:8px;font-size:12px;color:#888;font-weight:600;letter-spacing:1px;text-transform:uppercase">
+        Choose the correct box ↓ 請選擇正確的上傳區域
       </div>
       <div class="upload-section">
-        <div class="upload-box">
-          <input type="file" multiple accept=".jpg,.jpeg,.png,.pdf,.xml" capture="environment" onchange="handleFiles(event,'sales')">
+        <div class="upload-box upload-box-sales">
+          <input type="file" multiple accept=".jpg,.jpeg,.png,.pdf,.xml" onchange="handleFiles(event,'sales')">
           <span class="upload-icon">🧾</span>
-          <div class="upload-title-zh">銷項憑證</div>
+          <div class="upload-title-zh" style="color:#c84b31">銷項憑證</div>
           <div class="upload-title-en">Sales Invoices</div>
-          <div class="upload-sub-zh">開立給客戶的發票與收據</div>
-          <div style="font-size:11px;color:#bbb;margin-top:6px">JPG · PNG · PDF · XML · 📷 Camera</div>
-          <span class="upload-tag tag-sales">銷項 INCOME</span>
+          <div class="upload-sub-zh">您開立給客戶的發票<br>Invoices YOU sent to clients</div>
+          <span class="upload-tag tag-sales">💰 銷項 INCOME</span>
+          <div class="upload-hint">JPG · PNG · PDF · XML</div>
         </div>
-        <div class="upload-box">
-          <input type="file" multiple accept=".jpg,.jpeg,.png,.pdf,.xml" capture="environment" onchange="handleFiles(event,'expense')">
+        <div class="upload-box upload-box-expense">
+          <input type="file" multiple accept=".jpg,.jpeg,.png,.pdf,.xml" onchange="handleFiles(event,'expense')">
           <span class="upload-icon">🛒</span>
-          <div class="upload-title-zh">進項憑證</div>
+          <div class="upload-title-zh" style="color:#3b5bdb">進項憑證</div>
           <div class="upload-title-en">Purchase Receipts</div>
-          <div class="upload-sub-zh">公司採購的發票與收據</div>
-          <div style="font-size:11px;color:#bbb;margin-top:6px">JPG · PNG · PDF · XML · 📷 Camera</div>
-          <span class="upload-tag tag-expense">進項 EXPENSE</span>
+          <div class="upload-sub-zh">公司購買東西的收據<br>Receipts for things YOU bought</div>
+          <span class="upload-tag tag-expense">🛍️ 進項 EXPENSE</span>
+          <div class="upload-hint">JPG · PNG · PDF · XML</div>
         </div>
       </div>
+
+      <div id="saveStatus" class="save-status"></div>
       <div id="fileList"></div>
+
       <div class="card">
         <div class="section-title"><i class="ti ti-calendar"></i> 申報期間設定 <span class="section-title-sub">Tax Period</span></div>
         <div class="form-row-period">
@@ -229,6 +247,7 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height
           </div>
         </div>
       </div>
+
       <div class="card">
         <div class="section-title"><i class="ti ti-keyboard"></i> 手動輸入 <span class="section-title-sub">Manual Entry</span></div>
         <div class="form-row">
@@ -254,6 +273,7 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height
           </div>
         </div>
       </div>
+
       <div class="card">
         <div class="section-title" style="justify-content:space-between">
           <span style="display:flex;align-items:center;gap:8px">
@@ -261,12 +281,13 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height
             <span id="itemCount" style="font-family:var(--mono);font-size:11px;color:#aaa;font-weight:400;letter-spacing:0;text-transform:none"></span>
           </span>
           <div style="display:flex;gap:8px;align-items:center">
-            <button class="btn btn-secondary" style="padding:5px 12px;font-size:12px" onclick="loadItems()"><i class="ti ti-refresh"></i> Refresh</button>
+            <button class="btn btn-secondary" style="padding:5px 12px;font-size:12px" onclick="loadItems(true)"><i class="ti ti-refresh"></i> Refresh</button>
             <button class="btn btn-danger" onclick="clearAll()" style="padding:5px 12px;font-size:12px"><i class="ti ti-trash"></i> Clear All</button>
           </div>
         </div>
         <div id="itemRows"><div class="empty-state"><i class="ti ti-inbox"></i><p>Loading shared data...</p></div></div>
       </div>
+
       <div class="analyze-bar">
         <div>
           <div class="analyze-text-zh">產生稅務報告 <span class="ai-badge">AI</span></div>
@@ -278,9 +299,10 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height
         </button>
       </div>
     </div>
+
     <div class="panel" id="panel-report">
       <div id="reportContent">
-        <div class="no-report"><i class="ti ti-file-analytics"></i><p>No report yet. Add transactions and click Generate Report.<br>尚無報告。</p></div>
+        <div class="no-report"><i class="ti ti-file-analytics"></i><p>No report yet. Add transactions and click Generate.<br>尚無報告。</p></div>
       </div>
     </div>
   </div>
@@ -291,43 +313,6 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height
 const VAT = 0.05;
 let items = [];
 let reportData = null;
-let saveTimer = null;
-
-// ── IMAGE COMPRESSION ─────────────────────────────────────────────────────────
-// Resizes large images to max 1600px and compresses to JPEG quality 0.75
-// This keeps images under ~400KB — well within Netlify's 6MB function limit
-function compressImage(file) {
-  return new Promise((resolve) => {
-    // Non-image files pass through unchanged
-    const ext = file.name.split('.').pop().toLowerCase();
-    if (!['jpg','jpeg','png','gif','webp'].includes(ext)) {
-      resolve(file);
-      return;
-    }
-    const MAX_PX = 1600;
-    const QUALITY = 0.75;
-    const img = new Image();
-    const url = URL.createObjectURL(file);
-    img.onload = () => {
-      URL.revokeObjectURL(url);
-      let {width: w, height: h} = img;
-      if (w <= MAX_PX && h <= MAX_PX) {
-        // Small enough already — still re-encode to JPEG to ensure consistency
-      } else {
-        if (w > h) { h = Math.round(h * MAX_PX / w); w = MAX_PX; }
-        else       { w = Math.round(w * MAX_PX / h); h = MAX_PX; }
-      }
-      const canvas = document.createElement('canvas');
-      canvas.width = w; canvas.height = h;
-      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-      canvas.toBlob(blob => {
-        resolve(new File([blob], file.name.replace(/\.[^.]+$/, '.jpg'), {type:'image/jpeg'}));
-      }, 'image/jpeg', QUALITY);
-    };
-    img.onerror = () => { URL.revokeObjectURL(url); resolve(file); };
-    img.src = url;
-  });
-}
 
 // ── SYNC UI ───────────────────────────────────────────────────────────────────
 function setSyncStatus(status, text) {
@@ -335,6 +320,14 @@ function setSyncStatus(status, text) {
   badge.className = 'sync-badge sync-' + status;
   document.getElementById('syncText').textContent = text;
   badge.querySelector('.sync-dot').className = 'sync-dot' + (['saving','loading'].includes(status) ? ' pulse' : '');
+}
+
+function showSaveStatus(ok, msg) {
+  const el = document.getElementById('saveStatus');
+  el.className = 'save-status ' + (ok ? 'save-ok' : 'save-fail');
+  el.textContent = msg;
+  clearTimeout(el._t);
+  el._t = setTimeout(() => { el.className = 'save-status'; }, 4000);
 }
 
 function switchTab(tab) {
@@ -347,7 +340,7 @@ function showToast(msg, sub) {
   const t = document.getElementById('toast');
   document.getElementById('toastMsg').innerHTML = msg + (sub ? '<br><span style="font-size:10px;color:#aaa;font-family:var(--mono)">' + sub + '</span>' : '');
   t.classList.add('show'); clearTimeout(t._to);
-  t._to = setTimeout(() => t.classList.remove('show'), 3500);
+  t._to = setTimeout(() => t.classList.remove('show'), 4000);
 }
 
 function updatePeriod() {
@@ -362,42 +355,46 @@ function updatePeriod() {
   document.getElementById('periodBadge').innerHTML = zh + '<br><span style="font-size:9px;color:#aaa">' + en + '</span>';
 }
 
-async function loadItems() {
+// ── DATABASE ──────────────────────────────────────────────────────────────────
+async function loadItems(showToastMsg) {
   setSyncStatus('loading', 'Loading...');
   try {
     const resp = await fetch('/api/db');
-    if (!resp.ok) throw new Error('Load failed');
-    items = await resp.json();
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    const data = await resp.json();
+    items = Array.isArray(data) ? data : [];
     renderItems();
     setSyncStatus('live', '● Live — shared');
+    if (showToastMsg) showToast('Refreshed ✓', items.length + ' entries loaded');
   } catch(e) {
     setSyncStatus('error', 'Load failed');
-    showToast('Could not load shared data', 'Check your connection');
+    showToast('Could not load data', e.message);
   }
 }
 
 async function saveItems() {
   setSyncStatus('saving', 'Saving...');
   try {
-    const snapshot = JSON.stringify(items);
+    const payload = JSON.stringify({ items });
     const resp = await fetch('/api/db', {
       method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({items: JSON.parse(snapshot)})
+      headers: { 'Content-Type': 'application/json' },
+      body: payload
     });
-    if (!resp.ok) throw new Error('Save failed ' + resp.status);
+    const result = await resp.json();
+    if (!resp.ok) throw new Error(result.error || 'HTTP ' + resp.status);
     setSyncStatus('live', '● Live — shared');
+    showSaveStatus(true, '✓ Saved to shared database — ' + items.length + ' entries');
+    return true;
   } catch(e) {
     setSyncStatus('error', 'Save failed');
-    showToast('Could not save — tap Refresh and re-add', e.message);
+    showSaveStatus(false, '✗ Save failed: ' + e.message + ' — tap Refresh to check');
+    showToast('Save failed', e.message);
+    return false;
   }
 }
 
-function scheduleSave() {
-  // Immediate save — no delay, no race condition
-  saveItems();
-}
-
+// ── FORMAT ────────────────────────────────────────────────────────────────────
 const fmt = n => 'NT$' + Math.round(n).toLocaleString('zh-TW');
 
 function renderItems() {
@@ -407,11 +404,11 @@ function renderItems() {
     el.innerHTML = '<div class="empty-state"><i class="ti ti-inbox"></i><p>No transactions yet.<br><span style="font-size:11px;color:#ccc">Upload documents or add manually.</span></p></div>';
     return;
   }
-  el.innerHTML = '<div class="ledger-header-row"><span>Type</span><span>Description</span><span>Date</span><span style="text-align:right">Excl. VAT</span><span style="text-align:right">VAT 5%</span><span style="text-align:center">By</span><span></span></div>' +
+  el.innerHTML = '<div class="ledger-header-row"><span>Type</span><span>Description</span><span>Date</span><span style="text-align:right">Excl.VAT</span><span style="text-align:right">VAT</span><span style="text-align:center">By</span><span></span></div>' +
     items.map((it,i) => `<div class="item-row">
       <span class="item-type ${it.type==='sales'?'type-sales':'type-expense'}">${it.type==='sales'?'銷項':'進項'}</span>
-      <span>${it.desc}</span>
-      <span style="font-family:var(--mono);font-size:12px;color:#888">${it.date||'—'}</span>
+      <span style="font-size:12px">${it.desc}</span>
+      <span style="font-family:var(--mono);font-size:11px;color:#888">${it.date||'—'}</span>
       <span class="item-amount">${fmt(it.amount)}</span>
       <span class="item-amount" style="color:#aaa">${fmt(it.amount*VAT)}</span>
       <span class="item-who">${it.who||'—'}</span>
@@ -419,33 +416,60 @@ function renderItems() {
     </div>`).join('');
 }
 
-function removeItem(i) { items.splice(i,1); renderItems(); scheduleSave(); showToast('Entry removed'); }
-function clearAll() {
-  if (!confirm('Clear ALL transactions from the shared database?\n所有人的資料都會被刪除。')) return;
-  items = []; renderItems(); saveItems(); showToast('All data cleared');
+function removeItem(i) {
+  if (!confirm('Remove this entry?\n刪除此筆記錄？')) return;
+  items.splice(i,1); renderItems(); saveItems();
 }
+
+async function clearAll() {
+  if (!confirm('Clear ALL transactions from the shared database?\n\n所有人的資料都會被刪除，無法復原。')) return;
+  items = []; renderItems(); await saveItems();
+  showToast('All data cleared');
+}
+
 function getWho() { return document.getElementById('userName').value.trim() || 'Unknown'; }
 
-function addManual() {
+async function addManual() {
   const type = document.getElementById('mType').value;
   const date = document.getElementById('mDate').value;
   const desc = document.getElementById('mDesc').value.trim();
   const amount = parseFloat(document.getElementById('mAmount').value);
-  if (!desc) { showToast('Please enter a description'); return; }
-  if (!amount || amount <= 0) { showToast('Please enter a valid amount'); return; }
+  if (!desc) { showToast('Please enter a description', '請輸入說明'); return; }
+  if (!amount || amount <= 0) { showToast('Please enter a valid amount', '請輸入有效金額'); return; }
   items.push({type, date, desc, amount, source:'manual', who:getWho(), ts:Date.now()});
-  renderItems(); scheduleSave();
-  document.getElementById('mDesc').value = '';
-  document.getElementById('mAmount').value = '';
-  showToast('Entry added', 'Syncing to shared database...');
+  renderItems();
+  const ok = await saveItems();
+  if (ok) {
+    document.getElementById('mDesc').value = '';
+    document.getElementById('mAmount').value = '';
+  }
 }
 
-function fileIcon(name) {
-  const ext = name.split('.').pop().toLowerCase();
-  if (['jpg','jpeg','png'].includes(ext)) return '🖼️';
-  if (ext === 'pdf') return '📄';
-  if (ext === 'xml') return '📋';
-  return '📎';
+// ── IMAGE COMPRESSION ─────────────────────────────────────────────────────────
+function compressImage(file) {
+  return new Promise((resolve) => {
+    const ext = file.name.split('.').pop().toLowerCase();
+    if (!['jpg','jpeg','png','gif','webp'].includes(ext)) { resolve(file); return; }
+    const MAX_PX = 1600, QUALITY = 0.75;
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      let {width:w, height:h} = img;
+      if (w > MAX_PX || h > MAX_PX) {
+        if (w > h) { h = Math.round(h*MAX_PX/w); w = MAX_PX; }
+        else       { w = Math.round(w*MAX_PX/h); h = MAX_PX; }
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      canvas.toBlob(blob => {
+        resolve(new File([blob], file.name.replace(/\.[^.]+$/,'.jpg'), {type:'image/jpeg'}));
+      }, 'image/jpeg', QUALITY);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); resolve(file); };
+    img.src = url;
+  });
 }
 
 function toBase64(file) {
@@ -457,6 +481,7 @@ function toBase64(file) {
   });
 }
 
+// ── FILE UPLOAD ───────────────────────────────────────────────────────────────
 async function handleFiles(event, type) {
   const files = Array.from(event.target.files);
   if (!files.length) return;
@@ -466,83 +491,86 @@ async function handleFiles(event, type) {
     const id = 'f' + Date.now() + Math.random().toString(36).slice(2,5);
     const div = document.createElement('div');
     div.className = 'file-preview'; div.id = id;
-    div.innerHTML = `<span class="file-icon-el">${fileIcon(rawFile.name)}</span>
-      <div class="file-info">
-        <div class="file-name">${rawFile.name}</div>
-        <div class="file-status status-processing" id="${id}-s">Compressing image...</div>
+    div.innerHTML = `<span style="font-size:20px;width:28px;text-align:center">${rawFile.name.match(/\.(jpg|jpeg|png)$/i)?'🖼️':rawFile.name.match(/\.pdf$/i)?'📄':'📋'}</span>
+      <div style="flex:1">
+        <div style="font-weight:500;font-size:13px">${rawFile.name}</div>
+        <div class="file-status status-processing" id="${id}-s">Compressing...</div>
         <div class="progress-bar"><div class="progress-fill" id="${id}-p" style="width:5%"></div></div>
       </div>`;
     container.appendChild(div);
-    const prog = s => document.getElementById(id + s);
+    const s = x => document.getElementById(id+x);
 
     try {
-      // Step 1: Compress image before sending
       const file = await compressImage(rawFile);
-      const sizeMB = (file.size / 1024 / 1024).toFixed(2);
-      prog('-s').textContent = `Compressed to ${sizeMB}MB — sending to AI...`;
-      prog('-p').style.width = '30%';
+      s('-s').textContent = `Compressed to ${(file.size/1024).toFixed(0)}KB — sending to AI...`;
+      s('-p').style.width = '30%';
 
       const ext = file.name.split('.').pop().toLowerCase();
       let content = [];
 
       if (['jpg','jpeg','png'].includes(ext)) {
         const b64 = await toBase64(file);
-        prog('-p').style.width = '55%';
+        s('-p').style.width = '55%';
         content = [
           {type:'image', source:{type:'base64', media_type:'image/jpeg', data:b64}},
-          {type:'text', text:`This is a Taiwan 行號 ${type==='sales'?'sales invoice (銷項)':'purchase receipt (進項)'}. Extract: date (YYYY-MM-DD), description (what was sold/bought), amount EXCLUDING 5% VAT (divide by 1.05 if VAT-inclusive). Reply ONLY with JSON: {"date":"YYYY-MM-DD","desc":"...","amount":0}`}
+          {type:'text', text:`This is a Taiwan 行號 ${type==='sales'?'SALES invoice (銷項) — money coming IN to the company':'PURCHASE receipt (進項) — money going OUT of the company'}. Extract: date (YYYY-MM-DD), description, amount EXCLUDING 5% VAT (divide by 1.05 if VAT-inclusive). Reply ONLY with JSON: {"date":"YYYY-MM-DD","desc":"...","amount":0}`}
         ];
       } else if (ext === 'pdf') {
         const b64 = await toBase64(file);
-        prog('-p').style.width = '55%';
+        s('-p').style.width = '55%';
         content = [
           {type:'document', source:{type:'base64', media_type:'application/pdf', data:b64}},
           {type:'text', text:`Taiwan 行號 ${type==='sales'?'銷項發票':'進項收據'}. Extract date, description, amount excl. 5% VAT. Reply ONLY with JSON: {"date":"YYYY-MM-DD","desc":"...","amount":0}`}
         ];
       } else {
         const text = await file.text();
-        prog('-p').style.width = '55%';
-        content = [{type:'text', text:`Parse this Taiwan e-invoice XML. Extract date, description, amount excl. 5% VAT.\nXML:\n${text.slice(0,3000)}\nReply ONLY with JSON: {"date":"YYYY-MM-DD","desc":"...","amount":0}`}];
+        s('-p').style.width = '55%';
+        content = [{type:'text', text:`Parse Taiwan e-invoice XML. Extract date, description, amount excl. 5% VAT.\n${text.slice(0,3000)}\nReply ONLY JSON: {"date":"YYYY-MM-DD","desc":"...","amount":0}`}];
       }
 
-      prog('-s').textContent = 'AI reading document...';
-      prog('-p').style.width = '75%';
+      s('-s').textContent = 'AI reading...';
+      s('-p').style.width = '75%';
 
       const resp = await fetch('/api/claude', {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
+        method:'POST', headers:{'Content-Type':'application/json'},
         body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
-          max_tokens: 300,
-          system: 'Taiwan tax document parser. Reply only with valid JSON, no markdown.',
-          messages: [{role:'user', content}]
+          model:'claude-sonnet-4-6',
+          max_tokens:300,
+          system:'Taiwan tax document parser. Reply only with valid JSON, no markdown, no explanation.',
+          messages:[{role:'user', content}]
         })
       });
 
       if (!resp.ok) throw new Error('API error ' + resp.status);
       const data = await resp.json();
-      const raw = data.content?.map(c => c.text||'').join('').trim();
+      if (data.error) throw new Error(data.error.message || JSON.stringify(data.error));
+      const raw = data.content?.map(c=>c.text||'').join('').trim();
+      if (!raw) throw new Error('Empty response from AI');
       const parsed = JSON.parse(raw.replace(/```json|```/g,'').trim());
 
-      prog('-p').style.width = '100%';
-      prog('-s').className = 'file-status status-done';
-      prog('-s').textContent = `✓ ${type==='sales'?'銷項':'進項'} · ${parsed.desc} · NT$${Math.round(parsed.amount).toLocaleString()}`;
+      s('-p').style.width = '90%';
+      s('-s').textContent = 'Saving to database...';
 
       items.push({type, date:parsed.date, desc:parsed.desc, amount:parsed.amount, source:rawFile.name, who:getWho(), ts:Date.now()});
-      renderItems(); scheduleSave();
-      showToast(`${rawFile.name} processed`, 'Syncing...');
+      renderItems();
+      const saved = await saveItems();
+
+      s('-p').style.width = '100%';
+      s('-s').className = 'file-status ' + (saved ? 'status-done' : 'status-error');
+      s('-s').textContent = saved
+        ? `✓ ${type==='sales'?'銷項 INCOME':'進項 EXPENSE'} · ${parsed.desc} · NT$${Math.round(parsed.amount).toLocaleString()} · SAVED`
+        : `⚠ Parsed OK but save failed — check database`;
 
     } catch(e) {
-      prog('-s').className = 'file-status status-error';
-      const errMsg = e.message || "Unknown error";
-      prog('-s').className = 'file-status status-error';
-      prog('-s').textContent = `Error: ${errMsg} — add manually`;
+      s('-s').className = 'file-status status-error';
+      s('-s').textContent = 'Error: ' + e.message;
       console.error(e);
     }
   }
   event.target.value = '';
 }
 
+// ── GENERATE REPORT ───────────────────────────────────────────────────────────
 async function generateReport() {
   if (!items.length) { showToast('Add at least one transaction first'); return; }
   const btn = document.getElementById('analyzeBtn');
@@ -553,49 +581,39 @@ async function generateReport() {
   const tS=sales.reduce((s,i)=>s+i.amount,0), tE=expenses.reduce((s,i)=>s+i.amount,0);
   const oVat=tS*VAT, iVat=tE*VAT, vatPay=Math.max(0,oVat-iVat), profit=tS-tE;
 
-  const pType=document.getElementById('periodType').value;
-  const pYear=document.getElementById('periodYear').value;
-  const pMonth=document.getElementById('periodMonth').value;
-  const zhM={1:'1–2月',3:'3–4月',5:'5–6月',7:'7–8月',9:'9–10月',11:'11–12月'};
-  const enM={1:'Jan–Feb',3:'Mar–Apr',5:'May–Jun',7:'Jul–Aug',9:'Sep–Oct',11:'Nov–Dec'};
-  const zhP=pType==='annual'?`${pYear} 年度`:`${pYear} 年 ${zhM[pMonth]}`;
-  const enP=pType==='annual'?`FY ${pYear}`:`${enM[pMonth]} ${pYear}`;
+  const pType=document.getElementById('periodType').value, pYear=document.getElementById('periodYear').value, pMonth=document.getElementById('periodMonth').value;
+  const zhM={1:'1–2月',3:'3–4月',5:'5–6月',7:'7–8月',9:'9–10月',11:'11–12月'}, enM={1:'Jan–Feb',3:'Mar–Apr',5:'May–Jun',7:'Jul–Aug',9:'Sep–Oct',11:'Nov–Dec'};
+  const zhP=pType==='annual'?`${pYear} 年度`:`${pYear} 年 ${zhM[pMonth]}`, enP=pType==='annual'?`FY ${pYear}`:`${enM[pMonth]} ${pYear}`;
 
   let summary={zh:'',en:''};
   try {
-    const resp = await fetch('/api/claude', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({model:'claude-sonnet-4-6', max_tokens:600,
+    const resp = await fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:600,
         system:'Taiwan tax accountant. Reply only with valid JSON, no markdown.',
-        messages:[{role:'user', content:`Taiwan 行號 studio. Write 3-4 sentences each in Traditional Chinese and English: period overview, key figures, VAT position, one practical tip.
-Period:${zhP}/${enP} | Sales:NT$${Math.round(tS).toLocaleString()} | Expenses:NT$${Math.round(tE).toLocaleString()} | VAT payable:NT$${Math.round(vatPay).toLocaleString()} | Profit:NT$${Math.round(profit).toLocaleString()}
-Reply JSON:{"zh":"...","en":"..."}`}]})
-    });
-    const data = await resp.json();
-    const raw = data.content?.map(c=>c.text||'').join('').trim();
-    summary = JSON.parse(raw.replace(/```json|```/g,'').trim());
-  } catch(e) { console.error(e); }
+        messages:[{role:'user',content:`Taiwan 行號 studio. Write 3-4 sentences each in Traditional Chinese and English: period, figures, VAT position, one tip.
+Period:${zhP}/${enP}|Sales:NT$${Math.round(tS).toLocaleString()}|Expenses:NT$${Math.round(tE).toLocaleString()}|VAT:NT$${Math.round(vatPay).toLocaleString()}|Profit:NT$${Math.round(profit).toLocaleString()}
+Reply JSON:{"zh":"...","en":"..."}`}]})});
+    const d=await resp.json();
+    const raw=d.content?.map(c=>c.text||'').join('').trim();
+    summary=JSON.parse(raw.replace(/```json|```/g,'').trim());
+  } catch(e){console.error(e);}
 
-  reportData = {sales,expenses,tS,tE,oVat,iVat,vatPay,profit,zhP,enP,summary};
-  renderReport(reportData);
-  switchTab('report');
-  showToast('Report generated', '報告產生完成');
-  btn.innerHTML = '<i class="ti ti-report-analytics"></i> 產生報告 / Generate'; btn.disabled = false;
+  reportData={sales,expenses,tS,tE,oVat,iVat,vatPay,profit,zhP,enP,summary};
+  renderReport(reportData); switchTab('report');
+  showToast('Report generated ✓','報告產生完成');
+  btn.innerHTML='<i class="ti ti-report-analytics"></i> 產生報告 / Generate'; btn.disabled=false;
 }
 
 function renderReport(d) {
-  document.getElementById('reportContent').innerHTML = `
+  document.getElementById('reportContent').innerHTML=`
     <div class="report-top">
       <div>
         <div class="report-title-zh">稅務申報報告</div>
         <div class="report-title-en">TAX DECLARATION REPORT</div>
-        <div class="report-period">${d.zhP} · 行號工作室 ／ ${d.enP} · Studio</div>
-        ${(d.summary.zh||d.summary.en)?`<div class="bilingual-summary">
-          ${d.summary.zh?`<div class="summary-zh">${d.summary.zh}</div>`:''}
-          ${d.summary.en?`<div class="summary-en">${d.summary.en}</div>`:''}
-        </div>`:''}
+        <div class="report-period">${d.zhP} · 行號工作室 ／ ${d.enP}</div>
+        ${(d.summary.zh||d.summary.en)?`<div class="bilingual-summary">${d.summary.zh?`<div class="summary-zh">${d.summary.zh}</div>`:''}${d.summary.en?`<div class="summary-en">${d.summary.en}</div>`:''}</div>`:''}
       </div>
-      <div class="report-meta">Generated:${new Date().toLocaleDateString('zh-TW')}<br>Entries:${items.length}<br>VAT:5%<br>Shared ✓</div>
+      <div class="report-meta">Generated:${new Date().toLocaleDateString('zh-TW')}<br>Entries:${items.length}<br>VAT:5%</div>
     </div>
     <div class="summary-cards">
       <div class="summary-card card-income"><div class="card-label-zh">銷項總額</div><div class="card-label-en">Total Sales</div><div class="card-value" style="color:var(--green)">${fmt(d.tS)}</div><div class="card-sub">Output VAT:${fmt(d.oVat)}</div></div>
@@ -606,13 +624,13 @@ function renderReport(d) {
     <div class="ledger-section">
       <div class="ledger-head" style="background:var(--ink);color:white"><div><div class="ledger-head-zh">銷項明細</div><div class="ledger-head-en">Sales Invoices</div></div><span class="ledger-head-count">${d.sales.length} 筆·${fmt(d.tS)}</span></div>
       <table class="ledger-table"><thead><tr><th>Date</th><th>Description</th><th>Source</th><th>By</th><th class="r">Excl.VAT</th><th class="r">VAT</th><th class="r">Incl.VAT</th></tr></thead>
-      <tbody>${d.sales.map(i=>`<tr><td style="font-family:var(--mono);font-size:12px;color:#888">${i.date||'—'}</td><td>${i.desc}</td><td><span class="src-badge ${i.source==='manual'?'src-manual':'src-upload'}">${i.source==='manual'?'手動':'上傳'}</span></td><td style="font-family:var(--mono);font-size:11px;color:#aaa">${i.who||'—'}</td><td class="r">${fmt(i.amount)}</td><td class="r" style="color:#aaa">${fmt(i.amount*VAT)}</td><td class="r">${fmt(i.amount*1.05)}</td></tr>`).join('')}</tbody>
+      <tbody>${d.sales.map(i=>`<tr><td style="font-family:var(--mono);font-size:11px;color:#888">${i.date||'—'}</td><td>${i.desc}</td><td><span class="src-badge ${i.source==='manual'?'src-manual':'src-upload'}">${i.source==='manual'?'手動':'上傳'}</span></td><td style="font-family:var(--mono);font-size:11px;color:#aaa">${i.who||'—'}</td><td class="r">${fmt(i.amount)}</td><td class="r" style="color:#aaa">${fmt(i.amount*VAT)}</td><td class="r">${fmt(i.amount*1.05)}</td></tr>`).join('')}</tbody>
       <tfoot><tr><td colspan="4">合計</td><td class="r">${fmt(d.tS)}</td><td class="r">${fmt(d.oVat)}</td><td class="r">${fmt(d.tS*1.05)}</td></tr></tfoot></table>
     </div>
     <div class="ledger-section">
       <div class="ledger-head" style="background:var(--ink2);color:white"><div><div class="ledger-head-zh">進項明細</div><div class="ledger-head-en">Purchase Receipts</div></div><span class="ledger-head-count">${d.expenses.length} 筆·${fmt(d.tE)}</span></div>
       <table class="ledger-table"><thead><tr><th>Date</th><th>Description</th><th>Source</th><th>By</th><th class="r">Excl.VAT</th><th class="r">VAT</th><th class="r">Incl.VAT</th></tr></thead>
-      <tbody>${d.expenses.map(i=>`<tr><td style="font-family:var(--mono);font-size:12px;color:#888">${i.date||'—'}</td><td>${i.desc}</td><td><span class="src-badge ${i.source==='manual'?'src-manual':'src-upload'}">${i.source==='manual'?'手動':'上傳 '}</span></td><td style="font-family:var(--mono);font-size:11px;color:#aaa">${i.who||'—'}</td><td class="r">${fmt(i.amount)}</td><td class="r" style="color:#aaa">${fmt(i.amount*VAT)}</td><td class="r">${fmt(i.amount*1.05)}</td></tr>`).join('')}</tbody>
+      <tbody>${d.expenses.map(i=>`<tr><td style="font-family:var(--mono);font-size:11px;color:#888">${i.date||'—'}</td><td>${i.desc}</td><td><span class="src-badge ${i.source==='manual'?'src-manual':'src-upload'}">${i.source==='manual'?'手動':'上傳'}</span></td><td style="font-family:var(--mono);font-size:11px;color:#aaa">${i.who||'—'}</td><td class="r">${fmt(i.amount)}</td><td class="r" style="color:#aaa">${fmt(i.amount*VAT)}</td><td class="r">${fmt(i.amount*1.05)}</td></tr>`).join('')}</tbody>
       <tfoot><tr><td colspan="4">合計</td><td class="r">${fmt(d.tE)}</td><td class="r">${fmt(d.iVat)}</td><td class="r">${fmt(d.tE*1.05)}</td></tr></tfoot></table>
     </div>
     <div class="ledger-section">
@@ -630,23 +648,19 @@ function renderReport(d) {
 }
 
 function downloadCSV() {
-  if (!reportData) return;
-  const d = reportData;
-  const rows = [
-    ['Type','Date','Description','Added by','Source','Excl.VAT','VAT','Incl.VAT'],
+  if(!reportData)return;const d=reportData;
+  const rows=[['Type','Date','Description','By','Source','Excl.VAT','VAT','Incl.VAT'],
     ...d.sales.map(i=>['Sales/銷項',i.date||'',i.desc,i.who||'',i.source,i.amount,+(i.amount*VAT).toFixed(0),+(i.amount*1.05).toFixed(0)]),
     ...d.expenses.map(i=>['Expense/進項',i.date||'',i.desc,i.who||'',i.source,i.amount,+(i.amount*VAT).toFixed(0),+(i.amount*1.05).toFixed(0)]),
     [],['SUMMARY','','','','','','',''],
     ['Total Sales','','','','',d.tS,'',''],['Total Expenses','','','','',d.tE,'',''],
     ['Output VAT','','','','','',d.oVat,''],['Input VAT','','','','','',d.iVat,''],
-    ['Net VAT Payable','','','','','',d.vatPay,''],['Net Profit','','','','',d.profit,'',''],
-  ];
-  const csv = rows.map(r=>r.map(c=>`"${c}"`).join(',')).join('\n');
-  const a = document.createElement('a');
-  a.href = 'data:text/csv;charset=utf-8,\uFEFF' + encodeURIComponent(csv);
-  a.download = `tax_report_${d.enP.replace(/[^a-zA-Z0-9]/g,'_')}.csv`;
-  a.click();
-  showToast('Spreadsheet downloaded');
+    ['Net VAT Payable','','','','','',d.vatPay,''],['Net Profit','','','','',d.profit,'','']];
+  const csv=rows.map(r=>r.map(c=>`"${c}"`).join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
+  a.download=`tax_${d.enP.replace(/[^a-zA-Z0-9]/g,'_')}.csv`;
+  a.click();showToast('CSV downloaded');
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -654,8 +668,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const name = localStorage.getItem('tw_tax_username');
   if (name) document.getElementById('userName').value = name;
   document.getElementById('userName').addEventListener('input', e => localStorage.setItem('tw_tax_username', e.target.value));
-  loadItems();
-  // auto-refresh removed — use Refresh button to sync from other devices
+  loadItems(false);
 });
 </script>
 </body>
