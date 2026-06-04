@@ -134,8 +134,7 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height
 .toast{position:fixed;bottom:28px;right:28px;background:var(--ink);color:white;padding:12px 20px;border-radius:10px;font-size:13px;display:flex;align-items:flex-start;gap:10px;transform:translateY(80px);opacity:0;transition:all 0.3s;z-index:9999;max-width:320px;line-height:1.6;box-shadow:0 8px 32px rgba(0,0,0,0.3)}
 .toast.show{transform:translateY(0);opacity:1}
 .toast i{color:var(--accent2);margin-top:1px;flex-shrink:0}
-/* name tag */
-.name-bar{background:white;border:1px solid var(--border);border-radius:10px;padding:14px 20px;margin-bottom:20px;display:flex;align-items:center;gap:14px}
+.name-bar{background:white;border:1px solid var(--border);border-radius:10px;padding:14px 20px;margin-bottom:20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .name-bar label{font-size:13px;font-weight:700;color:var(--ink);white-space:nowrap}
 .name-bar input{font-family:var(--sans);font-size:13px;padding:7px 12px;border:1px solid var(--border);border-radius:6px;background:var(--paper);color:var(--ink);outline:none;width:200px}
 .name-bar input:focus{border-color:var(--accent);background:white}
@@ -147,6 +146,7 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height
   .analyze-bar{flex-direction:column;align-items:flex-start}
   .header{padding:12px 16px}
   .main{padding:16px}
+  .ledger-header-row,.item-row{grid-template-columns:70px 1fr 90px 100px 70px 60px 40px;font-size:11px}
 }
 @media print{
   .tabs,.actions-bar,.upload-section,#fileList,.card,.analyze-bar,.name-bar{display:none!important}
@@ -170,45 +170,38 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height
       <div class="period-badge" id="periodBadge">申報期間<br>Period: —</div>
     </div>
   </div>
-
   <div class="tabs">
     <button class="tab active" onclick="switchTab('upload')"><i class="ti ti-upload"></i> 上傳與輸入 / Upload &amp; Entry</button>
     <button class="tab" onclick="switchTab('report')"><i class="ti ti-file-text"></i> 稅務報告 / Tax Report</button>
   </div>
-
   <div class="main">
     <div class="panel active" id="panel-upload">
-
-      <!-- Who is adding? -->
       <div class="name-bar">
         <label><i class="ti ti-user" style="color:var(--accent)"></i> Your name:</label>
         <input type="text" id="userName" placeholder="e.g. Ken or Wife" maxlength="30">
-        <span class="name-bar-hint">Entries you add will be tagged with your name so you know who added what.</span>
+        <span class="name-bar-hint">Entries you add will be tagged with your name.</span>
       </div>
-
       <div class="upload-section">
         <div class="upload-box">
-          <input type="file" multiple accept=".jpg,.jpeg,.png,.pdf,.xml" onchange="handleFiles(event,'sales')">
+          <input type="file" multiple accept=".jpg,.jpeg,.png,.pdf,.xml" capture="environment" onchange="handleFiles(event,'sales')">
           <span class="upload-icon">🧾</span>
           <div class="upload-title-zh">銷項憑證</div>
           <div class="upload-title-en">Sales Invoices</div>
           <div class="upload-sub-zh">開立給客戶的發票與收據</div>
-          <div style="font-size:11px;color:#bbb;margin-top:6px">JPG · PNG · PDF · e-Invoice XML</div>
+          <div style="font-size:11px;color:#bbb;margin-top:6px">JPG · PNG · PDF · XML · 📷 Camera</div>
           <span class="upload-tag tag-sales">銷項 INCOME</span>
         </div>
         <div class="upload-box">
-          <input type="file" multiple accept=".jpg,.jpeg,.png,.pdf,.xml" onchange="handleFiles(event,'expense')">
+          <input type="file" multiple accept=".jpg,.jpeg,.png,.pdf,.xml" capture="environment" onchange="handleFiles(event,'expense')">
           <span class="upload-icon">🛒</span>
           <div class="upload-title-zh">進項憑證</div>
           <div class="upload-title-en">Purchase Receipts</div>
           <div class="upload-sub-zh">公司採購的發票與收據</div>
-          <div style="font-size:11px;color:#bbb;margin-top:6px">JPG · PNG · PDF · e-Invoice XML</div>
+          <div style="font-size:11px;color:#bbb;margin-top:6px">JPG · PNG · PDF · XML · 📷 Camera</div>
           <span class="upload-tag tag-expense">進項 EXPENSE</span>
         </div>
       </div>
-
       <div id="fileList"></div>
-
       <div class="card">
         <div class="section-title"><i class="ti ti-calendar"></i> 申報期間設定 <span class="section-title-sub">Tax Period</span></div>
         <div class="form-row-period">
@@ -236,16 +229,12 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height
           </div>
         </div>
       </div>
-
       <div class="card">
         <div class="section-title"><i class="ti ti-keyboard"></i> 手動輸入 <span class="section-title-sub">Manual Entry</span></div>
         <div class="form-row">
           <div class="form-group">
             <label>類型 <span>Type</span></label>
-            <select id="mType">
-              <option value="sales">銷項 Sales</option>
-              <option value="expense">進項 Expense</option>
-            </select>
+            <select id="mType"><option value="sales">銷項 Sales</option><option value="expense">進項 Expense</option></select>
           </div>
           <div class="form-group">
             <label>日期 <span>Date</span></label>
@@ -265,7 +254,6 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height
           </div>
         </div>
       </div>
-
       <div class="card">
         <div class="section-title" style="justify-content:space-between">
           <span style="display:flex;align-items:center;gap:8px">
@@ -274,14 +262,11 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height
           </span>
           <div style="display:flex;gap:8px;align-items:center">
             <button class="btn btn-secondary" style="padding:5px 12px;font-size:12px" onclick="loadItems()"><i class="ti ti-refresh"></i> Refresh</button>
-            <button class="btn btn-danger" onclick="clearAll()" style="padding:5px 12px;font-size:12px"><i class="ti ti-trash"></i> 清除全部 Clear All</button>
+            <button class="btn btn-danger" onclick="clearAll()" style="padding:5px 12px;font-size:12px"><i class="ti ti-trash"></i> Clear All</button>
           </div>
         </div>
-        <div id="itemRows">
-          <div class="empty-state"><i class="ti ti-inbox"></i><p>Loading shared data...<br><span style="font-size:11px;color:#ccc">Connecting to shared database</span></p></div>
-        </div>
+        <div id="itemRows"><div class="empty-state"><i class="ti ti-inbox"></i><p>Loading shared data...</p></div></div>
       </div>
-
       <div class="analyze-bar">
         <div>
           <div class="analyze-text-zh">產生稅務報告 <span class="ai-badge">AI</span></div>
@@ -293,18 +278,13 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height
         </button>
       </div>
     </div>
-
     <div class="panel" id="panel-report">
       <div id="reportContent">
-        <div class="no-report">
-          <i class="ti ti-file-analytics"></i>
-          <p>No report yet. Add transactions and click Generate Report.<br>尚無報告。請新增交易後點擊「產生報告」。</p>
-        </div>
+        <div class="no-report"><i class="ti ti-file-analytics"></i><p>No report yet. Add transactions and click Generate Report.<br>尚無報告。</p></div>
       </div>
     </div>
   </div>
 </div>
-
 <div class="toast" id="toast"><i class="ti ti-check"></i><span id="toastMsg"></span></div>
 
 <script>
@@ -313,32 +293,63 @@ let items = [];
 let reportData = null;
 let saveTimer = null;
 
-// ── SYNC UI ──────────────────────────────────────────────────────────────────
-function setSyncStatus(status, text) {
-  const badge = document.getElementById('syncBadge');
-  const label = document.getElementById('syncText');
-  badge.className = 'sync-badge sync-' + status;
-  label.textContent = text;
-  const dot = badge.querySelector('.sync-dot');
-  dot.className = 'sync-dot' + (status === 'saving' || status === 'loading' ? ' pulse' : '');
+// ── IMAGE COMPRESSION ─────────────────────────────────────────────────────────
+// Resizes large images to max 1600px and compresses to JPEG quality 0.75
+// This keeps images under ~400KB — well within Netlify's 6MB function limit
+function compressImage(file) {
+  return new Promise((resolve) => {
+    // Non-image files pass through unchanged
+    const ext = file.name.split('.').pop().toLowerCase();
+    if (!['jpg','jpeg','png','gif','webp'].includes(ext)) {
+      resolve(file);
+      return;
+    }
+    const MAX_PX = 1600;
+    const QUALITY = 0.75;
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      let {width: w, height: h} = img;
+      if (w <= MAX_PX && h <= MAX_PX) {
+        // Small enough already — still re-encode to JPEG to ensure consistency
+      } else {
+        if (w > h) { h = Math.round(h * MAX_PX / w); w = MAX_PX; }
+        else       { w = Math.round(w * MAX_PX / h); h = MAX_PX; }
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      canvas.toBlob(blob => {
+        resolve(new File([blob], file.name.replace(/\.[^.]+$/, '.jpg'), {type:'image/jpeg'}));
+      }, 'image/jpeg', QUALITY);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); resolve(file); };
+    img.src = url;
+  });
 }
 
-// ── TABS ─────────────────────────────────────────────────────────────────────
+// ── SYNC UI ───────────────────────────────────────────────────────────────────
+function setSyncStatus(status, text) {
+  const badge = document.getElementById('syncBadge');
+  badge.className = 'sync-badge sync-' + status;
+  document.getElementById('syncText').textContent = text;
+  badge.querySelector('.sync-dot').className = 'sync-dot' + (['saving','loading'].includes(status) ? ' pulse' : '');
+}
+
 function switchTab(tab) {
   document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', ['upload','report'][i] === tab));
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.getElementById('panel-' + tab).classList.add('active');
 }
 
-// ── TOAST ────────────────────────────────────────────────────────────────────
-function showToast(zh, en) {
+function showToast(msg, sub) {
   const t = document.getElementById('toast');
-  document.getElementById('toastMsg').innerHTML = zh + (en ? '<br><span style="font-size:10px;color:#aaa;font-family:var(--mono)">' + en + '</span>' : '');
+  document.getElementById('toastMsg').innerHTML = msg + (sub ? '<br><span style="font-size:10px;color:#aaa;font-family:var(--mono)">' + sub + '</span>' : '');
   t.classList.add('show'); clearTimeout(t._to);
   t._to = setTimeout(() => t.classList.remove('show'), 3500);
 }
 
-// ── PERIOD ───────────────────────────────────────────────────────────────────
 function updatePeriod() {
   const type = document.getElementById('periodType').value;
   const year = document.getElementById('periodYear').value;
@@ -346,12 +357,11 @@ function updatePeriod() {
   const zhM = {1:'1–2月',3:'3–4月',5:'5–6月',7:'7–8月',9:'9–10月',11:'11–12月'};
   const enM = {1:'Jan–Feb',3:'Mar–Apr',5:'May–Jun',7:'Jul–Aug',9:'Sep–Oct',11:'Nov–Dec'};
   const m = document.getElementById('periodMonth').value;
-  const zh = type === 'annual' ? `${year} 年度所得稅` : `${year} 年 ${zhM[m]} 營業稅`;
-  const en = type === 'annual' ? `FY ${year} Income Tax` : `${enM[m]} ${year} VAT`;
+  const zh = type==='annual' ? `${year} 年度所得稅` : `${year} 年 ${zhM[m]} 營業稅`;
+  const en = type==='annual' ? `FY ${year} Income Tax` : `${enM[m]} ${year} VAT`;
   document.getElementById('periodBadge').innerHTML = zh + '<br><span style="font-size:9px;color:#aaa">' + en + '</span>';
 }
 
-// ── DATABASE: LOAD ────────────────────────────────────────────────────────────
 async function loadItems() {
   setSyncStatus('loading', 'Loading...');
   try {
@@ -366,33 +376,26 @@ async function loadItems() {
   }
 }
 
-// ── DATABASE: SAVE ────────────────────────────────────────────────────────────
 async function saveItems() {
   setSyncStatus('saving', 'Saving...');
   try {
     const resp = await fetch('/api/db', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ items })
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({items})
     });
     if (!resp.ok) throw new Error('Save failed');
     setSyncStatus('live', '● Live — shared');
   } catch(e) {
-    setSyncStatus('error', 'Save failed — retry');
-    showToast('Could not save', 'Changes may not be synced');
+    setSyncStatus('error', 'Save failed');
+    showToast('Could not save changes', 'Retry or add manually');
   }
 }
 
-// Debounced save — waits 800ms after last change before saving
-function scheduleSave() {
-  clearTimeout(saveTimer);
-  saveTimer = setTimeout(saveItems, 800);
-}
+function scheduleSave() { clearTimeout(saveTimer); saveTimer = setTimeout(saveItems, 800); }
 
-// ── FORMAT ───────────────────────────────────────────────────────────────────
 const fmt = n => 'NT$' + Math.round(n).toLocaleString('zh-TW');
 
-// ── RENDER ITEMS ─────────────────────────────────────────────────────────────
 function renderItems() {
   const el = document.getElementById('itemRows');
   document.getElementById('itemCount').textContent = items.length ? `（${items.length} 筆）` : '';
@@ -400,10 +403,9 @@ function renderItems() {
     el.innerHTML = '<div class="empty-state"><i class="ti ti-inbox"></i><p>No transactions yet.<br><span style="font-size:11px;color:#ccc">Upload documents or add manually.</span></p></div>';
     return;
   }
-  el.innerHTML = `<div class="ledger-header-row"><span>Type</span><span>Description</span><span>Date</span><span style="text-align:right">Excl. VAT</span><span style="text-align:right">VAT 5%</span><span style="text-align:center">Added by</span><span></span></div>` +
-    items.map((it,i) => `
-    <div class="item-row">
-      <span class="item-type ${it.type==='sales'?'type-sales':'type-expense'}">${it.type==='sales'?'銷項 Sales':'進項 Expense'}</span>
+  el.innerHTML = '<div class="ledger-header-row"><span>Type</span><span>Description</span><span>Date</span><span style="text-align:right">Excl. VAT</span><span style="text-align:right">VAT 5%</span><span style="text-align:center">By</span><span></span></div>' +
+    items.map((it,i) => `<div class="item-row">
+      <span class="item-type ${it.type==='sales'?'type-sales':'type-expense'}">${it.type==='sales'?'銷項':'進項'}</span>
       <span>${it.desc}</span>
       <span style="font-family:var(--mono);font-size:12px;color:#888">${it.date||'—'}</span>
       <span class="item-amount">${fmt(it.amount)}</span>
@@ -413,37 +415,27 @@ function renderItems() {
     </div>`).join('');
 }
 
-// ── ADD / REMOVE ─────────────────────────────────────────────────────────────
-function removeItem(i) {
-  items.splice(i,1); renderItems(); scheduleSave();
-  showToast('Entry removed','已刪除');
-}
-
+function removeItem(i) { items.splice(i,1); renderItems(); scheduleSave(); showToast('Entry removed'); }
 function clearAll() {
-  if (!confirm('Clear ALL transactions from the shared database?\n\n這將刪除所有人的所有資料。')) return;
-  items = []; renderItems(); saveItems();
-  showToast('All data cleared','已清除全部資料');
+  if (!confirm('Clear ALL transactions from the shared database?\n所有人的資料都會被刪除。')) return;
+  items = []; renderItems(); saveItems(); showToast('All data cleared');
 }
-
-function getWho() {
-  return (document.getElementById('userName').value.trim() || 'Unknown');
-}
+function getWho() { return document.getElementById('userName').value.trim() || 'Unknown'; }
 
 function addManual() {
   const type = document.getElementById('mType').value;
   const date = document.getElementById('mDate').value;
   const desc = document.getElementById('mDesc').value.trim();
   const amount = parseFloat(document.getElementById('mAmount').value);
-  if (!desc) { showToast('Please enter a description','請輸入說明'); return; }
-  if (!amount || amount <= 0) { showToast('Please enter a valid amount','請輸入有效金額'); return; }
-  items.push({ type, date, desc, amount, source:'manual', who: getWho(), ts: Date.now() });
+  if (!desc) { showToast('Please enter a description'); return; }
+  if (!amount || amount <= 0) { showToast('Please enter a valid amount'); return; }
+  items.push({type, date, desc, amount, source:'manual', who:getWho(), ts:Date.now()});
   renderItems(); scheduleSave();
   document.getElementById('mDesc').value = '';
   document.getElementById('mAmount').value = '';
-  showToast('Entry added — syncing...','已新增，同步中…');
+  showToast('Entry added', 'Syncing to shared database...');
 }
 
-// ── FILE HANDLING ─────────────────────────────────────────────────────────────
 function fileIcon(name) {
   const ext = name.split('.').pop().toLowerCase();
   if (['jpg','jpeg','png'].includes(ext)) return '🖼️';
@@ -451,73 +443,100 @@ function fileIcon(name) {
   if (ext === 'xml') return '📋';
   return '📎';
 }
+
 function toBase64(file) {
-  return new Promise((res,rej) => { const r = new FileReader(); r.onload = () => res(r.result.split(',')[1]); r.onerror = rej; r.readAsDataURL(file); });
+  return new Promise((res,rej) => {
+    const r = new FileReader();
+    r.onload = () => res(r.result.split(',')[1]);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
 }
 
 async function handleFiles(event, type) {
   const files = Array.from(event.target.files);
   if (!files.length) return;
   const container = document.getElementById('fileList');
-  for (const file of files) {
+
+  for (const rawFile of files) {
     const id = 'f' + Date.now() + Math.random().toString(36).slice(2,5);
     const div = document.createElement('div');
     div.className = 'file-preview'; div.id = id;
-    div.innerHTML = `<span class="file-icon-el">${fileIcon(file.name)}</span>
+    div.innerHTML = `<span class="file-icon-el">${fileIcon(rawFile.name)}</span>
       <div class="file-info">
-        <div class="file-name">${file.name}</div>
-        <div class="file-status status-processing" id="${id}-s">AI reading... / AI 辨識中…</div>
-        <div class="progress-bar"><div class="progress-fill" id="${id}-p" style="width:10%"></div></div>
+        <div class="file-name">${rawFile.name}</div>
+        <div class="file-status status-processing" id="${id}-s">Compressing image...</div>
+        <div class="progress-bar"><div class="progress-fill" id="${id}-p" style="width:5%"></div></div>
       </div>`;
     container.appendChild(div);
     const prog = s => document.getElementById(id + s);
+
     try {
-      prog('-p').style.width = '40%';
+      // Step 1: Compress image before sending
+      const file = await compressImage(rawFile);
+      const sizeMB = (file.size / 1024 / 1024).toFixed(2);
+      prog('-s').textContent = `Compressed to ${sizeMB}MB — sending to AI...`;
+      prog('-p').style.width = '30%';
+
       const ext = file.name.split('.').pop().toLowerCase();
       let content = [];
+
       if (['jpg','jpeg','png'].includes(ext)) {
         const b64 = await toBase64(file);
+        prog('-p').style.width = '55%';
         content = [
-          { type:'image', source:{ type:'base64', media_type: file.type||'image/jpeg', data: b64 } },
-          { type:'text', text:`This is a Taiwan 行號 ${type==='sales'?'sales invoice (銷項)':'purchase receipt (進項)'}. Extract: date (YYYY-MM-DD), description (what was sold/bought), amount EXCLUDING 5% VAT (divide by 1.05 if VAT-inclusive). Reply ONLY with JSON: {"date":"YYYY-MM-DD","desc":"...","amount":0}` }
+          {type:'image', source:{type:'base64', media_type:'image/jpeg', data:b64}},
+          {type:'text', text:`This is a Taiwan 行號 ${type==='sales'?'sales invoice (銷項)':'purchase receipt (進項)'}. Extract: date (YYYY-MM-DD), description (what was sold/bought), amount EXCLUDING 5% VAT (divide by 1.05 if VAT-inclusive). Reply ONLY with JSON: {"date":"YYYY-MM-DD","desc":"...","amount":0}`}
         ];
       } else if (ext === 'pdf') {
         const b64 = await toBase64(file);
+        prog('-p').style.width = '55%';
         content = [
-          { type:'document', source:{ type:'base64', media_type:'application/pdf', data: b64 } },
-          { type:'text', text:`Taiwan 行號 ${type==='sales'?'銷項發票':'進項收據'}. Extract date, description, amount excl. 5% VAT. Reply ONLY with JSON: {"date":"YYYY-MM-DD","desc":"...","amount":0}` }
+          {type:'document', source:{type:'base64', media_type:'application/pdf', data:b64}},
+          {type:'text', text:`Taiwan 行號 ${type==='sales'?'銷項發票':'進項收據'}. Extract date, description, amount excl. 5% VAT. Reply ONLY with JSON: {"date":"YYYY-MM-DD","desc":"...","amount":0}`}
         ];
       } else {
         const text = await file.text();
-        content = [{ type:'text', text:`Parse this Taiwan e-invoice XML. Extract date, description, amount excl. 5% VAT.\nXML:\n${text.slice(0,3000)}\nReply ONLY with JSON: {"date":"YYYY-MM-DD","desc":"...","amount":0}` }];
+        prog('-p').style.width = '55%';
+        content = [{type:'text', text:`Parse this Taiwan e-invoice XML. Extract date, description, amount excl. 5% VAT.\nXML:\n${text.slice(0,3000)}\nReply ONLY with JSON: {"date":"YYYY-MM-DD","desc":"...","amount":0}`}];
       }
-      prog('-p').style.width = '70%';
+
+      prog('-s').textContent = 'AI reading document...';
+      prog('-p').style.width = '75%';
+
       const resp = await fetch('/api/claude', {
-        method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:300,
-          system:'Taiwan tax document parser. Reply only with valid JSON, no markdown.',
-          messages:[{ role:'user', content }] })
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 300,
+          system: 'Taiwan tax document parser. Reply only with valid JSON, no markdown.',
+          messages: [{role:'user', content}]
+        })
       });
+
       if (!resp.ok) throw new Error('API error ' + resp.status);
       const data = await resp.json();
-      const raw = data.content?.map(c=>c.text||'').join('').trim();
+      const raw = data.content?.map(c => c.text||'').join('').trim();
       const parsed = JSON.parse(raw.replace(/```json|```/g,'').trim());
+
       prog('-p').style.width = '100%';
       prog('-s').className = 'file-status status-done';
       prog('-s').textContent = `✓ ${type==='sales'?'銷項':'進項'} · ${parsed.desc} · NT$${Math.round(parsed.amount).toLocaleString()}`;
-      items.push({ type, date:parsed.date, desc:parsed.desc, amount:parsed.amount, source:file.name, who:getWho(), ts:Date.now() });
+
+      items.push({type, date:parsed.date, desc:parsed.desc, amount:parsed.amount, source:rawFile.name, who:getWho(), ts:Date.now()});
       renderItems(); scheduleSave();
-      showToast(`${file.name} processed`,'已解析，同步中…');
+      showToast(`${rawFile.name} processed`, 'Syncing...');
+
     } catch(e) {
       prog('-s').className = 'file-status status-error';
-      prog('-s').textContent = 'Could not parse — add manually / 無法解析，請手動輸入';
+      prog('-s').textContent = 'Could not parse — add manually / 無法解析';
       console.error(e);
     }
   }
   event.target.value = '';
 }
 
-// ── GENERATE REPORT ───────────────────────────────────────────────────────────
 async function generateReport() {
   if (!items.length) { showToast('Add at least one transaction first'); return; }
   const btn = document.getElementById('analyzeBtn');
@@ -525,29 +544,26 @@ async function generateReport() {
 
   const sales = items.filter(i=>i.type==='sales');
   const expenses = items.filter(i=>i.type==='expense');
-  const tS = sales.reduce((s,i)=>s+i.amount,0);
-  const tE = expenses.reduce((s,i)=>s+i.amount,0);
+  const tS=sales.reduce((s,i)=>s+i.amount,0), tE=expenses.reduce((s,i)=>s+i.amount,0);
   const oVat=tS*VAT, iVat=tE*VAT, vatPay=Math.max(0,oVat-iVat), profit=tS-tE;
 
-  const pType = document.getElementById('periodType').value;
-  const pYear = document.getElementById('periodYear').value;
-  const pMonth = document.getElementById('periodMonth').value;
+  const pType=document.getElementById('periodType').value;
+  const pYear=document.getElementById('periodYear').value;
+  const pMonth=document.getElementById('periodMonth').value;
   const zhM={1:'1–2月',3:'3–4月',5:'5–6月',7:'7–8月',9:'9–10月',11:'11–12月'};
   const enM={1:'Jan–Feb',3:'Mar–Apr',5:'May–Jun',7:'Jul–Aug',9:'Sep–Oct',11:'Nov–Dec'};
-  const zhP = pType==='annual' ? `${pYear} 年度` : `${pYear} 年 ${zhM[pMonth]}`;
-  const enP = pType==='annual' ? `FY ${pYear}` : `${enM[pMonth]} ${pYear}`;
+  const zhP=pType==='annual'?`${pYear} 年度`:`${pYear} 年 ${zhM[pMonth]}`;
+  const enP=pType==='annual'?`FY ${pYear}`:`${enM[pMonth]} ${pYear}`;
 
-  let summary = {zh:'',en:''};
+  let summary={zh:'',en:''};
   try {
     const resp = await fetch('/api/claude', {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:600,
+      body: JSON.stringify({model:'claude-sonnet-4-20250514', max_tokens:600,
         system:'Taiwan tax accountant. Reply only with valid JSON, no markdown.',
-        messages:[{ role:'user', content:`Taiwan 行號 studio tax summary. Write 3-4 sentences each in Traditional Chinese and English covering: period, key figures, VAT position, one practical tip.
-Period: ${zhP}/${enP} | Sales: NT$${Math.round(tS).toLocaleString()} | Expenses: NT$${Math.round(tE).toLocaleString()} | VAT payable: NT$${Math.round(vatPay).toLocaleString()} | Net profit: NT$${Math.round(profit).toLocaleString()}
-Sales: ${sales.map(i=>`${i.date||''}:${i.desc} $${Math.round(i.amount)}`).join('; ')}
-Expenses: ${expenses.map(i=>`${i.date||''}:${i.desc} $${Math.round(i.amount)}`).join('; ')}
-Reply JSON: {"zh":"...","en":"..."}` }] })
+        messages:[{role:'user', content:`Taiwan 行號 studio. Write 3-4 sentences each in Traditional Chinese and English: period overview, key figures, VAT position, one practical tip.
+Period:${zhP}/${enP} | Sales:NT$${Math.round(tS).toLocaleString()} | Expenses:NT$${Math.round(tE).toLocaleString()} | VAT payable:NT$${Math.round(vatPay).toLocaleString()} | Profit:NT$${Math.round(profit).toLocaleString()}
+Reply JSON:{"zh":"...","en":"..."}`}]})
     });
     const data = await resp.json();
     const raw = data.content?.map(c=>c.text||'').join('').trim();
@@ -557,7 +573,7 @@ Reply JSON: {"zh":"...","en":"..."}` }] })
   reportData = {sales,expenses,tS,tE,oVat,iVat,vatPay,profit,zhP,enP,summary};
   renderReport(reportData);
   switchTab('report');
-  showToast('Report generated','報告產生完成');
+  showToast('Report generated', '報告產生完成');
   btn.innerHTML = '<i class="ti ti-report-analytics"></i> 產生報告 / Generate'; btn.disabled = false;
 }
 
@@ -568,33 +584,33 @@ function renderReport(d) {
         <div class="report-title-zh">稅務申報報告</div>
         <div class="report-title-en">TAX DECLARATION REPORT</div>
         <div class="report-period">${d.zhP} · 行號工作室 ／ ${d.enP} · Studio</div>
-        ${(d.summary.zh||d.summary.en) ? `<div class="bilingual-summary">
+        ${(d.summary.zh||d.summary.en)?`<div class="bilingual-summary">
           ${d.summary.zh?`<div class="summary-zh">${d.summary.zh}</div>`:''}
           ${d.summary.en?`<div class="summary-en">${d.summary.en}</div>`:''}
-        </div>` : ''}
+        </div>`:''}
       </div>
-      <div class="report-meta">Generated: ${new Date().toLocaleDateString('zh-TW')}<br>Entries: ${items.length}<br>VAT Rate: 5%<br>Shared database ✓</div>
+      <div class="report-meta">Generated:${new Date().toLocaleDateString('zh-TW')}<br>Entries:${items.length}<br>VAT:5%<br>Shared ✓</div>
     </div>
     <div class="summary-cards">
-      <div class="summary-card card-income"><div class="card-label-zh">銷項總額</div><div class="card-label-en">Total Sales</div><div class="card-value" style="color:var(--green)">${fmt(d.tS)}</div><div class="card-sub">Output VAT: ${fmt(d.oVat)}</div></div>
-      <div class="summary-card card-expense"><div class="card-label-zh">進項總額</div><div class="card-label-en">Total Expenses</div><div class="card-value" style="color:var(--blue)">${fmt(d.tE)}</div><div class="card-sub">Input VAT: ${fmt(d.iVat)}</div></div>
+      <div class="summary-card card-income"><div class="card-label-zh">銷項總額</div><div class="card-label-en">Total Sales</div><div class="card-value" style="color:var(--green)">${fmt(d.tS)}</div><div class="card-sub">Output VAT:${fmt(d.oVat)}</div></div>
+      <div class="summary-card card-expense"><div class="card-label-zh">進項總額</div><div class="card-label-en">Total Expenses</div><div class="card-value" style="color:var(--blue)">${fmt(d.tE)}</div><div class="card-sub">Input VAT:${fmt(d.iVat)}</div></div>
       <div class="summary-card card-vat"><div class="card-label-zh">應繳營業稅</div><div class="card-label-en">VAT Payable</div><div class="card-value" style="color:${d.vatPay>0?'var(--gold)':'var(--green)'}">${fmt(d.vatPay)}</div><div class="card-sub">${d.vatPay<=0?'留抵 Credit':'繳至國稅局'}</div></div>
       <div class="summary-card card-profit"><div class="card-label-zh">稅前淨利</div><div class="card-label-en">Net Profit</div><div class="card-value" style="color:${d.profit>=0?'var(--green)':'var(--accent)'}">${fmt(d.profit)}</div><div class="card-sub">Before income tax</div></div>
     </div>
     <div class="ledger-section">
-      <div class="ledger-head" style="background:var(--ink);color:white"><div><div class="ledger-head-zh">銷項明細</div><div class="ledger-head-en">Sales Invoices</div></div><span class="ledger-head-count">${d.sales.length} 筆 · ${fmt(d.tS)}</span></div>
-      <table class="ledger-table"><thead><tr><th>Date</th><th>Description</th><th>Source</th><th>Added by</th><th class="r">Excl. VAT</th><th class="r">VAT</th><th class="r">Incl. VAT</th></tr></thead>
-      <tbody>${d.sales.map(i=>`<tr><td style="font-family:var(--mono);font-size:12px;color:#888">${i.date||'—'}</td><td>${i.desc}</td><td><span class="src-badge ${i.source==='manual'?'src-manual':'src-upload'}">${i.source==='manual'?'手動 Manual':'上傳 Upload'}</span></td><td style="font-family:var(--mono);font-size:11px;color:#aaa">${i.who||'—'}</td><td class="r">${fmt(i.amount)}</td><td class="r" style="color:#aaa">${fmt(i.amount*VAT)}</td><td class="r">${fmt(i.amount*1.05)}</td></tr>`).join('')}</tbody>
-      <tfoot><tr><td colspan="4">合計 Total</td><td class="r">${fmt(d.tS)}</td><td class="r">${fmt(d.oVat)}</td><td class="r">${fmt(d.tS*1.05)}</td></tr></tfoot></table>
+      <div class="ledger-head" style="background:var(--ink);color:white"><div><div class="ledger-head-zh">銷項明細</div><div class="ledger-head-en">Sales Invoices</div></div><span class="ledger-head-count">${d.sales.length} 筆·${fmt(d.tS)}</span></div>
+      <table class="ledger-table"><thead><tr><th>Date</th><th>Description</th><th>Source</th><th>By</th><th class="r">Excl.VAT</th><th class="r">VAT</th><th class="r">Incl.VAT</th></tr></thead>
+      <tbody>${d.sales.map(i=>`<tr><td style="font-family:var(--mono);font-size:12px;color:#888">${i.date||'—'}</td><td>${i.desc}</td><td><span class="src-badge ${i.source==='manual'?'src-manual':'src-upload'}">${i.source==='manual'?'手動':'上傳'}</span></td><td style="font-family:var(--mono);font-size:11px;color:#aaa">${i.who||'—'}</td><td class="r">${fmt(i.amount)}</td><td class="r" style="color:#aaa">${fmt(i.amount*VAT)}</td><td class="r">${fmt(i.amount*1.05)}</td></tr>`).join('')}</tbody>
+      <tfoot><tr><td colspan="4">合計</td><td class="r">${fmt(d.tS)}</td><td class="r">${fmt(d.oVat)}</td><td class="r">${fmt(d.tS*1.05)}</td></tr></tfoot></table>
     </div>
     <div class="ledger-section">
-      <div class="ledger-head" style="background:var(--ink2);color:white"><div><div class="ledger-head-zh">進項明細</div><div class="ledger-head-en">Purchase Receipts</div></div><span class="ledger-head-count">${d.expenses.length} 筆 · ${fmt(d.tE)}</span></div>
-      <table class="ledger-table"><thead><tr><th>Date</th><th>Description</th><th>Source</th><th>Added by</th><th class="r">Excl. VAT</th><th class="r">VAT</th><th class="r">Incl. VAT</th></tr></thead>
-      <tbody>${d.expenses.map(i=>`<tr><td style="font-family:var(--mono);font-size:12px;color:#888">${i.date||'—'}</td><td>${i.desc}</td><td><span class="src-badge ${i.source==='manual'?'src-manual':'src-upload'}">${i.source==='manual'?'手動 Manual':'上傳 Upload'}</span></td><td style="font-family:var(--mono);font-size:11px;color:#aaa">${i.who||'—'}</td><td class="r">${fmt(i.amount)}</td><td class="r" style="color:#aaa">${fmt(i.amount*VAT)}</td><td class="r">${fmt(i.amount*1.05)}</td></tr>`).join('')}</tbody>
-      <tfoot><tr><td colspan="4">合計 Total</td><td class="r">${fmt(d.tE)}</td><td class="r">${fmt(d.iVat)}</td><td class="r">${fmt(d.tE*1.05)}</td></tr></tfoot></table>
+      <div class="ledger-head" style="background:var(--ink2);color:white"><div><div class="ledger-head-zh">進項明細</div><div class="ledger-head-en">Purchase Receipts</div></div><span class="ledger-head-count">${d.expenses.length} 筆·${fmt(d.tE)}</span></div>
+      <table class="ledger-table"><thead><tr><th>Date</th><th>Description</th><th>Source</th><th>By</th><th class="r">Excl.VAT</th><th class="r">VAT</th><th class="r">Incl.VAT</th></tr></thead>
+      <tbody>${d.expenses.map(i=>`<tr><td style="font-family:var(--mono);font-size:12px;color:#888">${i.date||'—'}</td><td>${i.desc}</td><td><span class="src-badge ${i.source==='manual'?'src-manual':'src-upload'}">${i.source==='manual'?'手動':'上傳 '}</span></td><td style="font-family:var(--mono);font-size:11px;color:#aaa">${i.who||'—'}</td><td class="r">${fmt(i.amount)}</td><td class="r" style="color:#aaa">${fmt(i.amount*VAT)}</td><td class="r">${fmt(i.amount*1.05)}</td></tr>`).join('')}</tbody>
+      <tfoot><tr><td colspan="4">合計</td><td class="r">${fmt(d.tE)}</td><td class="r">${fmt(d.iVat)}</td><td class="r">${fmt(d.tE*1.05)}</td></tr></tfoot></table>
     </div>
     <div class="ledger-section">
-      <div class="ledger-head" style="background:var(--accent);color:white"><div><div class="ledger-head-zh">營業稅申報摘要</div><div class="ledger-head-en">VAT Declaration Summary</div></div></div>
+      <div class="ledger-head" style="background:var(--accent);color:white"><div><div class="ledger-head-zh">營業稅申報摘要</div><div class="ledger-head-en">VAT Summary</div></div></div>
       <table class="vat-summary-table">
         <tr><td>銷項稅額 Output Tax</td><td style="text-align:right;font-family:var(--mono)">${fmt(d.oVat)}</td></tr>
         <tr><td>進項稅額扣抵 Input Tax Credit</td><td style="text-align:right;font-family:var(--mono);color:var(--green)">− ${fmt(d.iVat)}</td></tr>
@@ -603,7 +619,7 @@ function renderReport(d) {
     </div>
     <div class="actions-bar">
       <button class="btn btn-secondary" onclick="downloadCSV()"><i class="ti ti-file-spreadsheet"></i> Download CSV</button>
-      <button class="btn btn-secondary" onclick="window.print()"><i class="ti ti-printer"></i> Print / Save PDF</button>
+      <button class="btn btn-secondary" onclick="window.print()"><i class="ti ti-printer"></i> Print / PDF</button>
     </div>`;
 }
 
@@ -615,32 +631,24 @@ function downloadCSV() {
     ...d.sales.map(i=>['Sales/銷項',i.date||'',i.desc,i.who||'',i.source,i.amount,+(i.amount*VAT).toFixed(0),+(i.amount*1.05).toFixed(0)]),
     ...d.expenses.map(i=>['Expense/進項',i.date||'',i.desc,i.who||'',i.source,i.amount,+(i.amount*VAT).toFixed(0),+(i.amount*1.05).toFixed(0)]),
     [],['SUMMARY','','','','','','',''],
-    ['Total Sales','','','','',d.tS,'',''],
-    ['Total Expenses','','','','',d.tE,'',''],
-    ['Output VAT','','','','','',d.oVat,''],
-    ['Input VAT','','','','','',d.iVat,''],
-    ['Net VAT Payable','','','','','',d.vatPay,''],
-    ['Net Profit','','','','',d.profit,'',''],
+    ['Total Sales','','','','',d.tS,'',''],['Total Expenses','','','','',d.tE,'',''],
+    ['Output VAT','','','','','',d.oVat,''],['Input VAT','','','','','',d.iVat,''],
+    ['Net VAT Payable','','','','','',d.vatPay,''],['Net Profit','','','','',d.profit,'',''],
   ];
   const csv = rows.map(r=>r.map(c=>`"${c}"`).join(',')).join('\n');
   const a = document.createElement('a');
   a.href = 'data:text/csv;charset=utf-8,\uFEFF' + encodeURIComponent(csv);
   a.download = `tax_report_${d.enP.replace(/[^a-zA-Z0-9]/g,'_')}.csv`;
   a.click();
-  showToast('Spreadsheet downloaded','試算表已下載');
+  showToast('Spreadsheet downloaded');
 }
 
-// ── INIT ──────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   updatePeriod();
-  // restore name from localStorage
-  const savedName = localStorage.getItem('tw_tax_username');
-  if (savedName) document.getElementById('userName').value = savedName;
-  document.getElementById('userName').addEventListener('input', e => {
-    localStorage.setItem('tw_tax_username', e.target.value);
-  });
+  const name = localStorage.getItem('tw_tax_username');
+  if (name) document.getElementById('userName').value = name;
+  document.getElementById('userName').addEventListener('input', e => localStorage.setItem('tw_tax_username', e.target.value));
   loadItems();
-  // auto-refresh every 30 seconds to pick up changes from other devices
   setInterval(loadItems, 30000);
 });
 </script>
